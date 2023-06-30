@@ -43,7 +43,7 @@ public class Topic extends BaseTimeEntity implements Serializable{
     private LocalDateTime dueDate;
 
     @Builder
-    public Topic(Long projectPk, String topicName, String topicDescription, LocalDateTime startDate, LocalDateTime dueDate){
+    public Topic(Project projectPk, String topicName, String topicDescription, LocalDateTime startDate, LocalDateTime dueDate){
         this.projectPk = projectPk;
         this.topicName = topicName;
         this.topicDescription = topicDescription;
