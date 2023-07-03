@@ -53,7 +53,4 @@ public class Project extends BaseTimeEntity implements Serializable{
     }
 
 
-
-
-
 }
