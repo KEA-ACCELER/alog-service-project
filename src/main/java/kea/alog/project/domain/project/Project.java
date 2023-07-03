@@ -1,6 +1,10 @@
 package kea.alog.project.domain.project;
 import java.io.Serializable;
 
+import java.util.ArrayList;
+import java.util.List;
+import kea.alog.project.domain.projectMember.ProjectMember;
+import kea.alog.project.domain.topic.Topic;
 import org.springframework.stereotype.Component;
 
 import jakarta.persistence.*;
@@ -29,7 +33,6 @@ public class Project extends BaseTimeEntity implements Serializable{
     @Column(name = "project_description", length=200)
     private String projectDescription;
 
-
     @Column(name="project_team_name", length=10)
     private String projectTeamName;
 
@@ -41,6 +44,12 @@ public class Project extends BaseTimeEntity implements Serializable{
 
     @Column(name="pm_pk")
     private Long pmPk;
+
+    @OneToMany(mappedBy = "project")
+    private List<Topic> topics = new ArrayList<>();
+
+    @OneToMany(mappedBy = "projectMember")
+    private List<ProjectMember> projectMembers = new ArrayList<>();
 
     @Builder
     public Project(String projectName, String projectDescription, String projectTeamName, Long projectTeamPk, String pmNn, Long pmPk){

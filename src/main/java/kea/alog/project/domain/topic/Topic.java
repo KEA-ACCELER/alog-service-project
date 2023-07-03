@@ -27,8 +27,8 @@ public class Topic extends BaseTimeEntity implements Serializable{
     private Long topicPk;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_pk")
-    private Project projectPk;
+    @JoinColumn(name = "project")
+    private Project project;
 
     @Column(name = "topic_name", length=60)
     private String topicName;
@@ -43,8 +43,8 @@ public class Topic extends BaseTimeEntity implements Serializable{
     private LocalDateTime dueDate;
 
     @Builder
-    public Topic(Project projectPk, String topicName, String topicDescription, LocalDateTime startDate, LocalDateTime dueDate){
-        this.projectPk = projectPk;
+    public Topic(Project project, String topicName, String topicDescription, LocalDateTime startDate, LocalDateTime dueDate){
+        this.project = project;
         this.topicName = topicName;
         this.topicDescription = topicDescription;
         this.startDate = startDate;
