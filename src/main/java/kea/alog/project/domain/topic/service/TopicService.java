@@ -5,5 +5,5 @@ import kea.alog.project.domain.topic.dto.response.TopicDto;
 
 public interface TopicService {
 
-    List<TopicDto> findAll();
+    List<TopicDto> findAll(String keyword);
 }

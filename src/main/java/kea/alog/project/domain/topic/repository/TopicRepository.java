@@ -7,5 +7,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
+
     List<Topic> findAll();
+
+    List<Topic> findByNameContainingOrDescriptionContaining(String name, String description);
+
 }
