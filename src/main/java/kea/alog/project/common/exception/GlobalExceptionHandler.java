@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 @Slf4j
@@ -16,8 +17,17 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ResponseDto> handleMissingServletRequestParameterException(
         MissingServletRequestParameterException e) {
         log.error("handleMissingServletRequestParameterException");
-        ResponseDto response = ResponseDto.fail(400, e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(ResponseDto.fail(400, "PROPERTY_REQUIRED"));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    protected ResponseEntity<ResponseDto> handleMethodArgumentTypeMismatchException(
+        MethodArgumentTypeMismatchException e
+    ) {
+        log.error("MethodArgumentTypeMismatchException");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(ResponseDto.fail(400, "INVALID_PROPERTY"));
     }
 }
 
