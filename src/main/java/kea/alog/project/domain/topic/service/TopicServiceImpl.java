@@ -23,27 +23,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public PageDto<TopicDto> findAll(String keyword, TopicSortType sortType, int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        switch (sortType) {
-            case START_DATE_ASC:
-                sort = Sort.by(Sort.Direction.ASC, "startDate");
-                break;
-            case START_DATE_DESC:
-                sort = Sort.by(Sort.Direction.DESC, "startDate");
-                break;
-            case DUE_DATE_ASC:
-                sort = Sort.by(Sort.Direction.ASC, "dueDate");
-                break;
-            case DUE_DATE_DESC:
-                sort = Sort.by(Sort.Direction.DESC, "dueDate");
-                break;
-            case ASC:
-                sort = Sort.by(Sort.Direction.ASC, "createdAt");
-                break;
-            case DESC:
-                sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        }
-
+        Sort sort = getSort(sortType);
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Topic> topicPage =
@@ -60,5 +40,22 @@ public class TopicServiceImpl implements TopicService {
                       .pageSize(topicPage.getSize())
                       .build();
 
+    }
+
+    private Sort getSort(TopicSortType sortType) {
+        switch (sortType) {
+            case START_DATE_ASC:
+                return Sort.by(Sort.Direction.ASC, "startDate");
+            case START_DATE_DESC:
+                return Sort.by(Sort.Direction.DESC, "startDate");
+            case DUE_DATE_ASC:
+                return Sort.by(Sort.Direction.ASC, "dueDate");
+            case DUE_DATE_DESC:
+                return Sort.by(Sort.Direction.DESC, "dueDate");
+            case ASC:
+                return Sort.by(Sort.Direction.ASC, "createdAt");
+            default:
+                return Sort.by(Sort.Direction.DESC, "createdAt");
+        }
     }
 }
