@@ -2,6 +2,7 @@ package kea.alog.project.domain.topic.controller;
 
 import java.util.List;
 import kea.alog.project.common.dto.ResponseDto;
+import kea.alog.project.domain.topic.constant.TopicSortType;
 import kea.alog.project.domain.topic.dto.response.TopicDto;
 import kea.alog.project.domain.topic.service.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,11 @@ public class TopicController {
 
     @GetMapping()
     public ResponseDto<List<TopicDto>> findAll(
-        @RequestParam(required = false) String keyword
+        // TODO: dto로 param 한 번에 받는 방법
+        @RequestParam(value = "keyword", required = false) String keyword,
+        @RequestParam("sortType") TopicSortType sortType
     ) {
-        return ResponseDto.success(200, topicService.findAll(keyword));
+        return ResponseDto.success(200,
+            topicService.findAll(keyword, sortType));
     }
 }
