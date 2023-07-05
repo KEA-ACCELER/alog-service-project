@@ -7,11 +7,12 @@ import kea.alog.project.domain.topic.dto.response.TopicDto;
 import kea.alog.project.domain.topic.service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/projects/topics")
+@RequestMapping("/api/projects/{projectPk}/topics")
 @RestController
 @RequiredArgsConstructor
 public class TopicController {
@@ -24,9 +25,10 @@ public class TopicController {
         @RequestParam(value = "keyword", required = false) String keyword,
         @RequestParam("sortType") TopicSortType sortType,
         @RequestParam("page") int page,
-        @RequestParam("size") int size
+        @RequestParam("size") int size,
+        @PathVariable Long projectPk
     ) {
         return ResponseDto.success(200,
-            topicService.findAll(keyword, sortType, page, size));
+            topicService.findAll(projectPk, keyword, sortType, page, size));
     }
 }
