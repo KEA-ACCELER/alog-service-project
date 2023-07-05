@@ -1,13 +1,16 @@
 package kea.alog.project.domain.topic.service;
 
-import java.util.List;
 import java.util.stream.Collectors;
+import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.domain.topic.constant.TopicSortType;
 import kea.alog.project.domain.topic.dto.response.TopicDto;
 import kea.alog.project.domain.topic.entity.Topic;
 import kea.alog.project.domain.topic.mapper.TopicMapper;
 import kea.alog.project.domain.topic.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +22,7 @@ public class TopicServiceImpl implements TopicService {
     private final TopicMapper topicMapper;
 
     @Override
-    public List<TopicDto> findAll(String keyword, TopicSortType sortType) {
+    public PageDto<TopicDto> findAll(String keyword, TopicSortType sortType, int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
         switch (sortType) {
             case START_DATE_ASC:
@@ -41,11 +44,21 @@ public class TopicServiceImpl implements TopicService {
                 sort = Sort.by(Sort.Direction.DESC, "createdAt");
         }
 
-        List<Topic> topics =
-            keyword == null ? topicRepository.findAll(sort)
-                : topicRepository.findByNameContainingOrDescriptionContaining(keyword, keyword,
-                    sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        return topics.stream().map(topicMapper::topicToDto).collect(Collectors.toList());
+        Page<Topic> topicPage =
+            keyword == null ? topicRepository.findAll(pageable)
+                : topicRepository.findByNameContainingOrDescriptionContaining(keyword, keyword,
+                    pageable);
+
+        return PageDto.<TopicDto>builder()
+                      .content(topicPage.getContent().stream().map(topicMapper::topicToDto)
+                                        .collect(Collectors.toList()))
+                      .totalPages(topicPage.getTotalPages())
+                      .totalElements(topicPage.getTotalElements())
+                      .pageNumber(topicPage.getNumber())
+                      .pageSize(topicPage.getSize())
+                      .build();
+
     }
 }
