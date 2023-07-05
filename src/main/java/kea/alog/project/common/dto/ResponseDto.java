@@ -22,8 +22,8 @@ public class ResponseDto<T> {
                           .build();
     }
 
-    public static <T> ResponseDto<T> fail(int code, String message) {
-        return ResponseDto.<T>builder()
+    public static ResponseDto fail(int code, String message) {
+        return ResponseDto.builder()
                           .code(code)
                           .message(message)
                           .build();
