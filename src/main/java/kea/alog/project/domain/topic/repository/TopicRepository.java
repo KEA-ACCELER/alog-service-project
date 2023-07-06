@@ -1,5 +1,6 @@
 package kea.alog.project.domain.topic.repository;
 
+import java.util.Optional;
 import kea.alog.project.domain.topic.entity.Topic;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,6 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
         Pageable pageable);
 
     Topic findByPk(Long pk);
+
+    Optional<Topic> findByPkAndProjectPk(Long pk, Long projectPk);
 }

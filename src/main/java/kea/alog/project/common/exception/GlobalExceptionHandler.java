@@ -29,5 +29,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .body(ResponseDto.fail(400, "INVALID_PROPERTY"));
     }
+
+    @ExceptionHandler(BusinessException.class)
+    protected ResponseEntity<ResponseDto> handleBusinessException(
+        BusinessException e
+    ) {
+        log.error("BusinessException");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            ResponseDto.fail(404, "ENTITY_NOT_FOUND")
+        );
+    }
 }
 

@@ -9,5 +9,5 @@ public interface TopicService {
     PageDto<TopicDto> findAll(Long projectPk, String keyword, TopicSortType sortType, int page,
         int size);
 
-    TopicDto findOne(Long pk);
+    TopicDto findOne(Long projectPk, Long topicPk);
 }
