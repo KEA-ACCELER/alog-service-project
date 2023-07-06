@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
 
-    Page<Topic> findAll(Pageable pageable);
+    Page<Topic> findAllByProjectPk(Long projectPk, Pageable pageable);
 
-    Page<Topic> findByNameContainingOrDescriptionContaining(String name, String description,
+    Page<Topic> findByNameContainingOrDescriptionContainingAndProjectPk(String name,
+        String description,
+        Long projectPk,
         Pageable pageable);
 
     Topic findByPk(Long pk);

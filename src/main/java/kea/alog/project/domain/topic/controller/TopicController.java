@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/projects/topics")
+@RequestMapping("/api/projects/{projectPk}/topics")
 @RestController
 @RequiredArgsConstructor
 public class TopicController {
@@ -28,11 +28,12 @@ public class TopicController {
         @RequestParam("size") int size
     ) {
         return ResponseDto.success(200,
-            topicService.findAll(keyword, sortType, page, size));
+            topicService.findAll(projectPk, keyword, sortType, page, size));
     }
 
     @GetMapping("/{pk}")
     public ResponseDto<TopicDto> findOne(@PathVariable Long pk) {
         return ResponseDto.success(200, topicService.findOne(pk));
     }
+
 }

@@ -23,13 +23,15 @@ public class TopicServiceImpl implements TopicService {
     private final TopicMapper topicMapper;
 
     @Override
-    public PageDto<TopicDto> findAll(String keyword, TopicSortType sortType, int page, int size) {
+    public PageDto<TopicDto> findAll(Long projectPk, String keyword, TopicSortType sortType,
+        int page, int size) {
         Sort sort = getSort(sortType);
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Topic> topicPage =
-            keyword == null ? topicRepository.findAll(pageable)
-                : topicRepository.findByNameContainingOrDescriptionContaining(keyword, keyword,
+            keyword == null ? topicRepository.findAllByProjectPk(projectPk, pageable)
+                : topicRepository.findByNameContainingOrDescriptionContainingAndProjectPk(keyword,
+                    keyword, projectPk,
                     pageable);
 
         return PageDto.<TopicDto>builder()

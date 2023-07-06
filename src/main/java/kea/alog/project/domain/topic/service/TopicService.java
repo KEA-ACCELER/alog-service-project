@@ -6,7 +6,8 @@ import kea.alog.project.domain.topic.dto.response.TopicDto;
 
 public interface TopicService {
 
-    PageDto<TopicDto> findAll(String keyword, TopicSortType sortType, int page, int size);
+    PageDto<TopicDto> findAll(Long projectPk, String keyword, TopicSortType sortType, int page,
+        int size);
 
     TopicDto findOne(Long pk);
 }
