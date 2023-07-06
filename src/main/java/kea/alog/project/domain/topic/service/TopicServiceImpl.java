@@ -1,7 +1,9 @@
 package kea.alog.project.domain.topic.service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import kea.alog.project.common.dto.PageDto;
+import kea.alog.project.common.exception.EntityNotFoundException;
 import kea.alog.project.domain.topic.constant.TopicSortType;
 import kea.alog.project.domain.topic.dto.response.TopicDto;
 import kea.alog.project.domain.topic.entity.Topic;
@@ -59,5 +61,14 @@ public class TopicServiceImpl implements TopicService {
             default:
                 return Sort.by(Sort.Direction.DESC, "createdAt");
         }
+    }
+
+    @Override
+    public TopicDto findOne(Long projectPk, Long topicPk) {
+        Optional<Topic> topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk);
+        if (!topic.isPresent()) {
+            throw new EntityNotFoundException("ENTITY_NOT_FOUND");
+        }
+        return topicMapper.topicToDto(topic.get());
     }
 }

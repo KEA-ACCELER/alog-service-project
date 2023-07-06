@@ -26,9 +26,17 @@ public class TopicController {
         @RequestParam("sortType") TopicSortType sortType,
         @RequestParam("page") int page,
         @RequestParam("size") int size,
-        @PathVariable Long projectPk
+        @PathVariable("projectPk") Long projectPk
     ) {
         return ResponseDto.success(200,
             topicService.findAll(projectPk, keyword, sortType, page, size));
     }
+
+    @GetMapping("/{topicPk}")
+    public ResponseDto<TopicDto> findOne(
+        @PathVariable("projectPk") Long projectPk,
+        @PathVariable("topicPk") Long topicPk) {
+        return ResponseDto.success(200, topicService.findOne(projectPk, topicPk));
+    }
+
 }
