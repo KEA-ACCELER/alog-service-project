@@ -14,4 +14,5 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
     Page<Topic> findByNameContainingOrDescriptionContaining(String name, String description,
         Pageable pageable);
 
+    Topic findByPk(Long pk);
 }

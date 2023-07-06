@@ -7,6 +7,7 @@ import kea.alog.project.domain.topic.dto.response.TopicDto;
 import kea.alog.project.domain.topic.service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,5 +29,10 @@ public class TopicController {
     ) {
         return ResponseDto.success(200,
             topicService.findAll(keyword, sortType, page, size));
+    }
+
+    @GetMapping("/{pk}")
+    public ResponseDto<TopicDto> findOne(@PathVariable Long pk) {
+        return ResponseDto.success(200, topicService.findOne(pk));
     }
 }
