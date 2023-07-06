@@ -25,7 +25,8 @@ public class TopicController {
         @RequestParam(value = "keyword", required = false) String keyword,
         @RequestParam("sortType") TopicSortType sortType,
         @RequestParam("page") int page,
-        @RequestParam("size") int size
+        @RequestParam("size") int size,
+        @PathVariable Long projectPk
     ) {
         return ResponseDto.success(200,
             topicService.findAll(projectPk, keyword, sortType, page, size));
