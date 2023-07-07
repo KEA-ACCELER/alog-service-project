@@ -1,6 +1,5 @@
 package kea.alog.project.domain.topic.service;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.exception.EntityNotFoundException;
@@ -71,11 +70,11 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public TopicDto findOne(Long projectPk, Long topicPk) {
-        Optional<Topic> topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk);
-        if (!topic.isPresent()) {
-            throw new EntityNotFoundException("ENTITY_NOT_FOUND");
-        }
-        return topicMapper.topicToDto(topic.get());
+        Topic topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk)
+                                     .orElseThrow(() ->
+                                         new EntityNotFoundException("ENTITY_NOT_FOUND"));
+
+        return topicMapper.topicToDto(topic);
     }
 
     @Transactional
