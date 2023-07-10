@@ -1,6 +1,7 @@
 package kea.alog.project.domain.topic.service;
 
 import java.util.stream.Collectors;
+import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.exception.EntityNotFoundException;
 import kea.alog.project.domain.project.entity.Project;
@@ -125,12 +126,14 @@ public class TopicServiceImpl implements TopicService {
         return UpdateTopicResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
 
+    @Transactional
     @Override
     public DeleteTopicResponseDto delete(Long projectPk, Long topicPk) {
         Topic topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk).orElseThrow(
             () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
 
-        topicRepository.deleteById(topicPk);
+        topic.setStatus(Status.DELETED);
+        topicRepository.save(topic);
 
         return DeleteTopicResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
