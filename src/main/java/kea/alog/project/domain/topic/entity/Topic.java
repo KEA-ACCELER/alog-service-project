@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import kea.alog.project.common.entity.BaseEntity;
@@ -32,18 +33,23 @@ public class Topic extends BaseEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project")
+    @NotNull
     private Project project;
 
     @Column(name = "name", length = 60)
+    @NotNull
     private String name;
 
     @Column(name = "description", length = 100)
+    @NotNull
     private String description;
 
     @Column(name = "start_date")
+    @NotNull
     private LocalDateTime startDate;
 
     @Column(name = "due_date")
+    @NotNull
     private LocalDateTime dueDate;
 
     @Builder

@@ -1,10 +1,13 @@
 package kea.alog.project.domain.topic.service;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.exception.EntityNotFoundException;
+import kea.alog.project.domain.project.entity.Project;
+import kea.alog.project.domain.project.repository.ProjectRepository;
 import kea.alog.project.domain.topic.constant.TopicSortType;
+import kea.alog.project.domain.topic.dto.request.CreateTopicRequestDto;
+import kea.alog.project.domain.topic.dto.response.CreateTopicResponseDto;
 import kea.alog.project.domain.topic.dto.response.TopicDto;
 import kea.alog.project.domain.topic.entity.Topic;
 import kea.alog.project.domain.topic.mapper.TopicMapper;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class TopicServiceImpl implements TopicService {
 
     private final TopicRepository topicRepository;
     private final TopicMapper topicMapper;
+    private final ProjectRepository projectRepository;
 
     @Override
     public PageDto<TopicDto> findAll(Long projectPk, String keyword, TopicSortType sortType,
@@ -65,10 +70,28 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public TopicDto findOne(Long projectPk, Long topicPk) {
-        Optional<Topic> topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk);
-        if (!topic.isPresent()) {
-            throw new EntityNotFoundException("ENTITY_NOT_FOUND");
-        }
-        return topicMapper.topicToDto(topic.get());
+        Topic topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk)
+                                     .orElseThrow(() ->
+                                         new EntityNotFoundException("ENTITY_NOT_FOUND"));
+
+        return topicMapper.topicToDto(topic);
+    }
+
+    @Transactional
+    @Override
+    public CreateTopicResponseDto create(Long projectPk,
+        CreateTopicRequestDto createTopicRequestDto) {
+        Project project = projectRepository.findById(projectPk).orElseThrow(
+            () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
+
+        Topic topic = topicRepository.save(Topic.builder()
+                                                .project(project)
+                                                .name(createTopicRequestDto.getName())
+                                                .description(createTopicRequestDto.getDescription())
+                                                .startDate(createTopicRequestDto.getStartDate())
+                                                .dueDate(createTopicRequestDto.getDueDate())
+                                                .build());
+
+        return CreateTopicResponseDto.builder().topicPk(topic.getPk()).projectPk(projectPk).build();
     }
 }
