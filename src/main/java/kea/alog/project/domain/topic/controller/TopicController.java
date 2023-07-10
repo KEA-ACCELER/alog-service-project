@@ -9,6 +9,7 @@ import kea.alog.project.domain.topic.dto.request.UpdateTopicRequestDto;
 import kea.alog.project.domain.topic.dto.response.TopicDto;
 import kea.alog.project.domain.topic.service.TopicService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,6 +58,12 @@ public class TopicController {
         @RequestBody UpdateTopicRequestDto updateTopicRequestDto) {
         return ResponseDto.success(200,
             topicService.update(projectPk, topicPk, updateTopicRequestDto));
+    }
+
+    @DeleteMapping("/{topicPk}")
+    public ResponseDto delete(@PathVariable("projectPk") Long projectPk,
+        @PathVariable("topicPk") Long topicPk) {
+        return ResponseDto.success(200, topicService.delete(projectPk, topicPk));
     }
 
 }
