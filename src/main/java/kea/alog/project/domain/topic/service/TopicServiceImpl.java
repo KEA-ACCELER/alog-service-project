@@ -9,6 +9,7 @@ import kea.alog.project.domain.topic.constant.TopicSortType;
 import kea.alog.project.domain.topic.dto.request.CreateTopicRequestDto;
 import kea.alog.project.domain.topic.dto.request.UpdateTopicRequestDto;
 import kea.alog.project.domain.topic.dto.response.CreateTopicResponseDto;
+import kea.alog.project.domain.topic.dto.response.DeleteTopicResponseDto;
 import kea.alog.project.domain.topic.dto.response.TopicDto;
 import kea.alog.project.domain.topic.dto.response.UpdateTopicResponseDto;
 import kea.alog.project.domain.topic.entity.Topic;
@@ -122,5 +123,15 @@ public class TopicServiceImpl implements TopicService {
         }
 
         return UpdateTopicResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
+    }
+
+    @Override
+    public DeleteTopicResponseDto delete(Long projectPk, Long topicPk) {
+        Topic topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk).orElseThrow(
+            () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
+
+        topicRepository.deleteById(topicPk);
+
+        return DeleteTopicResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
 }
