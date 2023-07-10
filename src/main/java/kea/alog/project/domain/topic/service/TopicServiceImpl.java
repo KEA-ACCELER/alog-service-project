@@ -5,7 +5,7 @@ import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.exception.EntityNotFoundException;
 import kea.alog.project.domain.project.entity.Project;
-import kea.alog.project.domain.project.repository.ProjectRepository;
+import kea.alog.project.domain.project.service.ProjectService;
 import kea.alog.project.domain.topic.constant.TopicSortType;
 import kea.alog.project.domain.topic.dto.request.CreateTopicRequestDto;
 import kea.alog.project.domain.topic.dto.request.UpdateTopicRequestDto;
@@ -30,7 +30,14 @@ public class TopicServiceImpl implements TopicService {
 
     private final TopicRepository topicRepository;
     private final TopicMapper topicMapper;
-    private final ProjectRepository projectRepository;
+    private final ProjectService projectService;
+
+    @Override
+    public Topic findByProjectPkAndTopicPk(Long projectPk, Long topicPk) {
+        return topicRepository.findByPkAndProjectPkAndStatus(topicPk, projectPk,
+            Status.NORMAL).orElseThrow(
+            () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
+    }
 
     @Override
     public PageDto<TopicDto> findAll(Long projectPk, String keyword, TopicSortType sortType,
@@ -39,9 +46,11 @@ public class TopicServiceImpl implements TopicService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Topic> topicPage =
-            keyword == null ? topicRepository.findAllByProjectPk(projectPk, pageable)
-                : topicRepository.findByNameContainingOrDescriptionContainingAndProjectPk(keyword,
-                    keyword, projectPk,
+            keyword == null ? topicRepository.findAllByProjectPkAndStatus(projectPk, Status.NORMAL,
+                pageable)
+                : topicRepository.findByNameContainingOrDescriptionContainingAndProjectPkAndStatus(
+                    keyword,
+                    keyword, projectPk, Status.NORMAL,
                     pageable);
 
         return PageDto.<TopicDto>builder()
@@ -74,10 +83,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public TopicDto findOne(Long projectPk, Long topicPk) {
-        Topic topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk)
-                                     .orElseThrow(() ->
-                                         new EntityNotFoundException("ENTITY_NOT_FOUND"));
-
+        Topic topic = findByProjectPkAndTopicPk(projectPk, topicPk);
         return topicMapper.topicToDto(topic);
     }
 
@@ -85,8 +91,7 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public CreateTopicResponseDto create(Long projectPk,
         CreateTopicRequestDto createTopicRequestDto) {
-        Project project = projectRepository.findById(projectPk).orElseThrow(
-            () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
+        Project project = projectService.findByPk(projectPk);
 
         Topic topic = topicRepository.save(Topic.builder()
                                                 .project(project)
@@ -103,8 +108,7 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public UpdateTopicResponseDto update(Long projectPk, Long topicPk,
         UpdateTopicRequestDto updateTopicRequestDto) {
-        Topic topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk).orElseThrow(
-            () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
+        Topic topic = findByProjectPkAndTopicPk(projectPk, topicPk);
 
 //        topicMapper.updateTopicFromDto(updateTopicRequestDto, topic);
 //        topicRepository.save(topic);
@@ -129,8 +133,7 @@ public class TopicServiceImpl implements TopicService {
     @Transactional
     @Override
     public DeleteTopicResponseDto delete(Long projectPk, Long topicPk) {
-        Topic topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk).orElseThrow(
-            () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
+        Topic topic = findByProjectPkAndTopicPk(projectPk, topicPk);
 
         topic.setStatus(Status.DELETED);
         topicRepository.save(topic);
