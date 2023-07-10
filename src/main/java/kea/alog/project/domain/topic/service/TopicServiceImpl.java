@@ -7,8 +7,10 @@ import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.repository.ProjectRepository;
 import kea.alog.project.domain.topic.constant.TopicSortType;
 import kea.alog.project.domain.topic.dto.request.CreateTopicRequestDto;
+import kea.alog.project.domain.topic.dto.request.UpdateTopicRequestDto;
 import kea.alog.project.domain.topic.dto.response.CreateTopicResponseDto;
 import kea.alog.project.domain.topic.dto.response.TopicDto;
+import kea.alog.project.domain.topic.dto.response.UpdateTopicResponseDto;
 import kea.alog.project.domain.topic.entity.Topic;
 import kea.alog.project.domain.topic.mapper.TopicMapper;
 import kea.alog.project.domain.topic.repository.TopicRepository;
@@ -93,5 +95,32 @@ public class TopicServiceImpl implements TopicService {
                                                 .build());
 
         return CreateTopicResponseDto.builder().topicPk(topic.getPk()).projectPk(projectPk).build();
+    }
+
+    @Transactional
+    @Override
+    public UpdateTopicResponseDto update(Long projectPk, Long topicPk,
+        UpdateTopicRequestDto updateTopicRequestDto) {
+        Topic topic = topicRepository.findByPkAndProjectPk(topicPk, projectPk).orElseThrow(
+            () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
+
+//        topicMapper.updateTopicFromDto(updateTopicRequestDto, topic);
+//        topicRepository.save(topic);
+
+        // TODO: mapper로 변경
+        if (updateTopicRequestDto.getName() != null) {
+            topic.setName(updateTopicRequestDto.getName());
+        }
+        if (updateTopicRequestDto.getDescription() != null) {
+            topic.setDescription(updateTopicRequestDto.getDescription());
+        }
+        if (updateTopicRequestDto.getStartDate() != null) {
+            topic.setStartDate(updateTopicRequestDto.getStartDate());
+        }
+        if (updateTopicRequestDto.getDueDate() != null) {
+            topic.setDueDate(updateTopicRequestDto.getDueDate());
+        }
+
+        return UpdateTopicResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
 }
