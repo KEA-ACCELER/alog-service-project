@@ -4,14 +4,14 @@ import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.exception.EntityNotFoundException;
 import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.repository.ProjectRepository;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ProjectServiceImp implements ProjectService {
 
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
     @Override
     public Project findByPk(Long projectPk) {
