@@ -110,22 +110,8 @@ public class TopicServiceImpl implements TopicService {
         UpdateTopicRequestDto updateTopicRequestDto) {
         Topic topic = findByProjectPkAndTopicPk(projectPk, topicPk);
 
-//        topicMapper.updateTopicFromDto(updateTopicRequestDto, topic);
-//        topicRepository.save(topic);
-
-        // TODO: mapper로 변경
-        if (updateTopicRequestDto.getName() != null) {
-            topic.setName(updateTopicRequestDto.getName());
-        }
-        if (updateTopicRequestDto.getDescription() != null) {
-            topic.setDescription(updateTopicRequestDto.getDescription());
-        }
-        if (updateTopicRequestDto.getStartDate() != null) {
-            topic.setStartDate(updateTopicRequestDto.getStartDate());
-        }
-        if (updateTopicRequestDto.getDueDate() != null) {
-            topic.setDueDate(updateTopicRequestDto.getDueDate());
-        }
+        topicMapper.updateTopicFromDto(updateTopicRequestDto, topic);
+        topicRepository.save(topic);
 
         return UpdateTopicResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
