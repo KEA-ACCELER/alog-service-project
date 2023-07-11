@@ -30,7 +30,7 @@ public class ProjectMember extends BaseEntity implements Serializable {
     private Long pk;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project")
+    @JoinColumn(name = "project_pk")
     private Project project;
 
     @Column(name = "user_nn", length = 10)

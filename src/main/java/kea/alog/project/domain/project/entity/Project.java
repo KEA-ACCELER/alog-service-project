@@ -51,7 +51,7 @@ public class Project extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "project")
     private List<Topic> topics = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userPk")
+    @OneToMany(mappedBy = "project")
     private List<ProjectMember> projectMembers = new ArrayList<>();
 
     @Builder
