@@ -55,6 +55,4 @@ public class Project extends BaseEntity implements Serializable {
         this.teamPk = teamPk;
         this.pmPk = pmPk;
     }
-
-
 }
