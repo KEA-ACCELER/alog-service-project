@@ -36,14 +36,8 @@ public class Project extends BaseEntity implements Serializable {
     @Column(name = "description", length = 200)
     private String description;
 
-    @Column(name = "team_name", length = 10)
-    private String teamName;
-
     @Column(name = "team_pk")
     private Long teamPk;
-
-    @Column(name = "pm_nn", length = 10)
-    private String pmNn;
 
     @Column(name = "pm_pk")
     private Long pmPk;
@@ -55,13 +49,10 @@ public class Project extends BaseEntity implements Serializable {
     private List<ProjectMember> projectMembers = new ArrayList<>();
 
     @Builder
-    public Project(String name, String description, String teamName,
-        Long teamPk, String pmNn, Long pmPk) {
+    public Project(String name, String description, Long teamPk, Long pmPk) {
         this.name = name;
         this.description = description;
-        this.teamName = teamName;
         this.teamPk = teamPk;
-        this.pmNn = pmNn;
         this.pmPk = pmPk;
     }
 
