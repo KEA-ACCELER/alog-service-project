@@ -34,7 +34,7 @@ public class Topic extends BaseEntity implements Serializable {
     private Long pk;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project")
+    @JoinColumn(name = "project_pk")
     @NotNull
     private Project project;
 
