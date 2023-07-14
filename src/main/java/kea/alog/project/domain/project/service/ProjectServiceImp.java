@@ -33,6 +33,11 @@ public class ProjectServiceImp implements ProjectService {
     }
 
     @Override
+    public ProjectDto findOne(Long projectPk) {
+        return projectMapper.projectToDto(findByPk(projectPk));
+    }
+
+    @Override
     public CreateProjectResponseDto create(CreateProjectRequestDto createProjectRequestDto) {
         Project project = Project.builder().name(createProjectRequestDto.getName())
                                  .description(createProjectRequestDto.getDescription())

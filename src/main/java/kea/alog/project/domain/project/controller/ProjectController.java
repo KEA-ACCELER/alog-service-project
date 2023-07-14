@@ -8,6 +8,7 @@ import kea.alog.project.domain.project.dto.request.CreateProjectRequestDto;
 import kea.alog.project.domain.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,5 +32,10 @@ public class ProjectController {
         @RequestParam("sortType") ProjectSortType sortType, @RequestParam("page") int page,
         @RequestParam("size") int size) {
         return ResponseDto.success(200, projectService.findAll(keyword, sortType, page, size));
+    }
+
+    @GetMapping("/{projectPk}")
+    public ResponseDto findOne(@PathVariable("projectPk") Long projectPk) {
+        return ResponseDto.success(200, projectService.findOne(projectPk));
     }
 }
