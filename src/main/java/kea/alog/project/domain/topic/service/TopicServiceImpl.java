@@ -65,20 +65,14 @@ public class TopicServiceImpl implements TopicService {
     }
 
     private Sort getSort(TopicSortType sortType) {
-        switch (sortType) {
-            case START_DATE_ASC:
-                return Sort.by(Sort.Direction.ASC, "startDate");
-            case START_DATE_DESC:
-                return Sort.by(Sort.Direction.DESC, "startDate");
-            case DUE_DATE_ASC:
-                return Sort.by(Sort.Direction.ASC, "dueDate");
-            case DUE_DATE_DESC:
-                return Sort.by(Sort.Direction.DESC, "dueDate");
-            case ASC:
-                return Sort.by(Sort.Direction.ASC, "createdAt");
-            default:
-                return Sort.by(Sort.Direction.DESC, "createdAt");
-        }
+        return switch (sortType) {
+            case START_DATE_ASC -> Sort.by(Sort.Direction.ASC, "startDate");
+            case START_DATE_DESC -> Sort.by(Sort.Direction.DESC, "startDate");
+            case DUE_DATE_ASC -> Sort.by(Sort.Direction.ASC, "dueDate");
+            case DUE_DATE_DESC -> Sort.by(Sort.Direction.DESC, "dueDate");
+            case ASC -> Sort.by(Sort.Direction.ASC, "createdAt");
+            default -> Sort.by(Sort.Direction.DESC, "createdAt");
+        };
     }
 
     @Override
