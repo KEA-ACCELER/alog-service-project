@@ -6,8 +6,10 @@ import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.exception.EntityNotFoundException;
 import kea.alog.project.domain.project.constant.ProjectSortType;
 import kea.alog.project.domain.project.dto.request.CreateProjectRequestDto;
+import kea.alog.project.domain.project.dto.request.UpdateProjectRequestDto;
 import kea.alog.project.domain.project.dto.response.CreateProjectResponseDto;
 import kea.alog.project.domain.project.dto.response.ProjectDto;
+import kea.alog.project.domain.project.dto.response.ProjectPkResponseDto;
 import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.mapper.ProjectMapper;
 import kea.alog.project.domain.project.repository.ProjectRepository;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,7 @@ public class ProjectServiceImp implements ProjectService {
         return projectMapper.projectToDto(findByPk(projectPk));
     }
 
+    @Transactional
     @Override
     public CreateProjectResponseDto create(CreateProjectRequestDto createProjectRequestDto) {
         Project project = Project.builder().name(createProjectRequestDto.getName())
@@ -71,6 +75,17 @@ public class ProjectServiceImp implements ProjectService {
                       .pageNumber(projectPage.getNumber())
                       .pageSize(projectPage.getSize())
                       .build();
+    }
+
+    @Transactional
+    @Override
+    public ProjectPkResponseDto update(Long projectPk,
+        UpdateProjectRequestDto updateProjectRequestDto) {
+        Project project = findByPk(projectPk);
+
+        projectMapper.updateProjectFromDto(updateProjectRequestDto, project);
+
+        return ProjectPkResponseDto.builder().projectPk(projectPk).build();
     }
 
     private Sort getSort(ProjectSortType sortType) {

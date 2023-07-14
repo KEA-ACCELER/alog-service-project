@@ -6,11 +6,14 @@ import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
 import kea.alog.project.domain.project.constant.ProjectSortType;
 import kea.alog.project.domain.project.dto.request.CreateProjectRequestDto;
+import kea.alog.project.domain.project.dto.request.UpdateProjectRequestDto;
 import kea.alog.project.domain.project.dto.response.CreateProjectResponseDto;
 import kea.alog.project.domain.project.dto.response.ProjectDto;
+import kea.alog.project.domain.project.dto.response.ProjectPkResponseDto;
 import kea.alog.project.domain.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,5 +45,13 @@ public class ProjectController {
     @GetMapping("/{projectPk}")
     public ResponseDto<ProjectDto> findOne(@PathVariable("projectPk") Long projectPk) {
         return ResponseDto.success(200, projectService.findOne(projectPk));
+    }
+
+    @PatchMapping("/{projectPk}")
+    public ResponseDto<ProjectPkResponseDto> update(
+        @PathVariable("projectPk") Long projectPk,
+        @Valid @RequestBody UpdateProjectRequestDto updateProjectRequestDto
+    ) {
+        return ResponseDto.success(200, projectService.update(projectPk, updateProjectRequestDto));
     }
 }
