@@ -6,9 +6,8 @@ import kea.alog.project.common.dto.ResponseDto;
 import kea.alog.project.domain.topic.constant.TopicSortType;
 import kea.alog.project.domain.topic.dto.request.CreateTopicRequestDto;
 import kea.alog.project.domain.topic.dto.request.UpdateTopicRequestDto;
-import kea.alog.project.domain.topic.dto.response.CreateTopicResponseDto;
 import kea.alog.project.domain.topic.dto.response.TopicDto;
-import kea.alog.project.domain.topic.dto.response.UpdateTopicResponseDto;
+import kea.alog.project.domain.topic.dto.response.TopicPkResponseDto;
 import kea.alog.project.domain.topic.service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,13 +48,13 @@ public class TopicController {
     }
 
     @PostMapping
-    public ResponseDto<CreateTopicResponseDto> create(@PathVariable("projectPk") Long projectPk,
+    public ResponseDto<TopicPkResponseDto> create(@PathVariable("projectPk") Long projectPk,
         @Valid @RequestBody CreateTopicRequestDto createTopicRequestDto) {
         return ResponseDto.success(201, topicService.create(projectPk, createTopicRequestDto));
     }
 
     @PatchMapping("/{topicPk}")
-    public ResponseDto<UpdateTopicResponseDto> update(@PathVariable("projectPk") Long projectPk,
+    public ResponseDto<TopicPkResponseDto> update(@PathVariable("projectPk") Long projectPk,
         @PathVariable("topicPk") Long topicPk,
         @RequestBody UpdateTopicRequestDto updateTopicRequestDto) {
         return ResponseDto.success(200,

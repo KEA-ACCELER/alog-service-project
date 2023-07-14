@@ -9,10 +9,8 @@ import kea.alog.project.domain.project.service.ProjectService;
 import kea.alog.project.domain.topic.constant.TopicSortType;
 import kea.alog.project.domain.topic.dto.request.CreateTopicRequestDto;
 import kea.alog.project.domain.topic.dto.request.UpdateTopicRequestDto;
-import kea.alog.project.domain.topic.dto.response.CreateTopicResponseDto;
-import kea.alog.project.domain.topic.dto.response.DeleteTopicResponseDto;
 import kea.alog.project.domain.topic.dto.response.TopicDto;
-import kea.alog.project.domain.topic.dto.response.UpdateTopicResponseDto;
+import kea.alog.project.domain.topic.dto.response.TopicPkResponseDto;
 import kea.alog.project.domain.topic.entity.Topic;
 import kea.alog.project.domain.topic.mapper.TopicMapper;
 import kea.alog.project.domain.topic.repository.TopicRepository;
@@ -83,7 +81,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Transactional
     @Override
-    public CreateTopicResponseDto create(Long projectPk,
+    public TopicPkResponseDto create(Long projectPk,
         CreateTopicRequestDto createTopicRequestDto) {
         Project project = projectService.findByPk(projectPk);
 
@@ -95,29 +93,28 @@ public class TopicServiceImpl implements TopicService {
                                                 .dueDate(createTopicRequestDto.getDueDate())
                                                 .build());
 
-        return CreateTopicResponseDto.builder().topicPk(topic.getPk()).projectPk(projectPk).build();
+        return TopicPkResponseDto.builder().topicPk(topic.getPk()).projectPk(projectPk).build();
     }
 
     @Transactional
     @Override
-    public UpdateTopicResponseDto update(Long projectPk, Long topicPk,
+    public TopicPkResponseDto update(Long projectPk, Long topicPk,
         UpdateTopicRequestDto updateTopicRequestDto) {
         Topic topic = findByProjectPkAndTopicPk(projectPk, topicPk);
 
         topicMapper.updateTopicFromDto(updateTopicRequestDto, topic);
-        topicRepository.save(topic);
 
-        return UpdateTopicResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
+        return TopicPkResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
 
     @Transactional
     @Override
-    public DeleteTopicResponseDto delete(Long projectPk, Long topicPk) {
+    public TopicPkResponseDto delete(Long projectPk, Long topicPk) {
         Topic topic = findByProjectPkAndTopicPk(projectPk, topicPk);
 
         topic.setStatus(Status.DELETED);
         topicRepository.save(topic);
 
-        return DeleteTopicResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
+        return TopicPkResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
 }

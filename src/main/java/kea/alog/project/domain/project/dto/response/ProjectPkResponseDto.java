@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CreateProjectResponseDto {
+public class ProjectPkResponseDto {
 
     private Long projectPk;
 }
