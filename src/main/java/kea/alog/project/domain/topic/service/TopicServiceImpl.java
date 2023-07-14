@@ -105,7 +105,6 @@ public class TopicServiceImpl implements TopicService {
         Topic topic = findByProjectPkAndTopicPk(projectPk, topicPk);
 
         topicMapper.updateTopicFromDto(updateTopicRequestDto, topic);
-        topicRepository.save(topic);
 
         return UpdateTopicResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
