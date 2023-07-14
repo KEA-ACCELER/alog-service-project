@@ -7,7 +7,6 @@ import kea.alog.project.common.exception.EntityNotFoundException;
 import kea.alog.project.domain.project.constant.ProjectSortType;
 import kea.alog.project.domain.project.dto.request.CreateProjectRequestDto;
 import kea.alog.project.domain.project.dto.request.UpdateProjectRequestDto;
-import kea.alog.project.domain.project.dto.response.CreateProjectResponseDto;
 import kea.alog.project.domain.project.dto.response.ProjectDto;
 import kea.alog.project.domain.project.dto.response.ProjectPkResponseDto;
 import kea.alog.project.domain.project.entity.Project;
@@ -42,7 +41,7 @@ public class ProjectServiceImp implements ProjectService {
 
     @Transactional
     @Override
-    public CreateProjectResponseDto create(CreateProjectRequestDto createProjectRequestDto) {
+    public ProjectPkResponseDto create(CreateProjectRequestDto createProjectRequestDto) {
         Project project = Project.builder().name(createProjectRequestDto.getName())
                                  .description(createProjectRequestDto.getDescription())
                                  .teamPk(createProjectRequestDto.getTeamPk())
@@ -50,7 +49,7 @@ public class ProjectServiceImp implements ProjectService {
 
         Long projectPk = projectRepository.save(project).getPk();
 
-        return CreateProjectResponseDto.builder().projectPk(projectPk).build();
+        return ProjectPkResponseDto.builder().projectPk(projectPk).build();
     }
 
     @Override

@@ -7,7 +7,6 @@ import kea.alog.project.common.dto.ResponseDto;
 import kea.alog.project.domain.project.constant.ProjectSortType;
 import kea.alog.project.domain.project.dto.request.CreateProjectRequestDto;
 import kea.alog.project.domain.project.dto.request.UpdateProjectRequestDto;
-import kea.alog.project.domain.project.dto.response.CreateProjectResponseDto;
 import kea.alog.project.domain.project.dto.response.ProjectDto;
 import kea.alog.project.domain.project.dto.response.ProjectPkResponseDto;
 import kea.alog.project.domain.project.service.ProjectService;
@@ -29,7 +28,7 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping()
-    public ResponseDto<CreateProjectResponseDto> create(
+    public ResponseDto<ProjectPkResponseDto> create(
         @Valid @RequestBody CreateProjectRequestDto createProjectRequestDto) {
         return ResponseDto.success(201, projectService.create(createProjectRequestDto));
     }
