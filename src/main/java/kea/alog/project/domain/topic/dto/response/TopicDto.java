@@ -18,4 +18,5 @@ public class TopicDto {
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime dueDate;
+    private LocalDateTime createdAt;
 }

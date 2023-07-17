@@ -17,12 +17,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "project")
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Setter
 public class Project extends BaseEntity implements Serializable {
 
     @Id
@@ -36,14 +38,8 @@ public class Project extends BaseEntity implements Serializable {
     @Column(name = "description", length = 200)
     private String description;
 
-    @Column(name = "team_name", length = 10)
-    private String teamName;
-
     @Column(name = "team_pk")
     private Long teamPk;
-
-    @Column(name = "pm_nn", length = 10)
-    private String pmNn;
 
     @Column(name = "pm_pk")
     private Long pmPk;
@@ -51,19 +47,14 @@ public class Project extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "project")
     private List<Topic> topics = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userPk")
+    @OneToMany(mappedBy = "project")
     private List<ProjectMember> projectMembers = new ArrayList<>();
 
     @Builder
-    public Project(String name, String description, String teamName,
-        Long teamPk, String pmNn, Long pmPk) {
+    public Project(String name, String description, Long teamPk, Long pmPk) {
         this.name = name;
         this.description = description;
-        this.teamName = teamName;
         this.teamPk = teamPk;
-        this.pmNn = pmNn;
         this.pmPk = pmPk;
     }
-
-
 }

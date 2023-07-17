@@ -30,19 +30,15 @@ public class ProjectMember extends BaseEntity implements Serializable {
     private Long pk;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project")
+    @JoinColumn(name = "project_pk")
     private Project project;
-
-    @Column(name = "user_nn", length = 10)
-    private String userNn;
 
     @Column(name = "user_pk")
     private Long userPk;
 
     @Builder
-    public ProjectMember(Project project, String userNn, Long userPk) {
+    public ProjectMember(Project project, Long userPk) {
         this.project = project;
-        this.userNn = userNn;
         this.userPk = userPk;
     }
 
