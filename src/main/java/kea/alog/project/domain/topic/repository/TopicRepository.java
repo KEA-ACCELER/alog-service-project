@@ -11,13 +11,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
 
-    Page<Topic> findAllByProjectPkAndStatus(Long projectPk, Status status, Pageable pageable);
+    Page<Topic> findAllByProjectPkAndStatusAndProjectStatus(Long projectPk, Status status,
+        Status projectStatus, Pageable pageable);
 
-    Page<Topic> findByNameContainingOrDescriptionContainingAndProjectPkAndStatus(String name,
+    Page<Topic> findByNameContainingOrDescriptionContainingAndProjectPkAndStatusAndProjectStatus(
+        String name,
         String description,
         Long projectPk,
         Status status,
+        Status projectStatus,
         Pageable pageable);
 
-    Optional<Topic> findByPkAndProjectPkAndStatus(Long pk, Long projectPk, Status status);
+    Optional<Topic> findByPkAndProjectPkAndStatusAndProjectStatus(Long pk, Long projectPk,
+        Status status, Status projectStatus);
 }
