@@ -87,6 +87,15 @@ public class ProjectServiceImp implements ProjectService {
         return ProjectPkResponseDto.builder().projectPk(projectPk).build();
     }
 
+    @Override
+    public ProjectPkResponseDto delete(Long projectPk) {
+        Project project = findByPk(projectPk);
+        project.setStatus(Status.DELETED);
+        projectRepository.save(project);
+
+        return ProjectPkResponseDto.builder().projectPk(projectPk).build();
+    }
+
     private Sort getSort(ProjectSortType sortType) {
         return switch (sortType) {
             case ASC -> Sort.by(Direction.ASC, "createdAt");

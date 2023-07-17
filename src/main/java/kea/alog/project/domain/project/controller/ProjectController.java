@@ -11,6 +11,7 @@ import kea.alog.project.domain.project.dto.response.ProjectDto;
 import kea.alog.project.domain.project.dto.response.ProjectPkResponseDto;
 import kea.alog.project.domain.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,5 +53,10 @@ public class ProjectController {
         @Valid @RequestBody UpdateProjectRequestDto updateProjectRequestDto
     ) {
         return ResponseDto.success(200, projectService.update(projectPk, updateProjectRequestDto));
+    }
+
+    @DeleteMapping("/{projectPk}")
+    public ResponseDto<ProjectPkResponseDto> delete(@PathVariable("projectPk") Long projectPk) {
+        return ResponseDto.success(200, projectService.delete(projectPk));
     }
 }

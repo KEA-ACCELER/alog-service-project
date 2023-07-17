@@ -32,8 +32,8 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Topic findByProjectPkAndTopicPk(Long projectPk, Long topicPk) {
-        return topicRepository.findByPkAndProjectPkAndStatus(topicPk, projectPk,
-            Status.NORMAL).orElseThrow(
+        return topicRepository.findByPkAndProjectPkAndStatusAndProjectStatus(topicPk, projectPk,
+            Status.NORMAL, Status.NORMAL).orElseThrow(
             () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
     }
 
@@ -44,11 +44,13 @@ public class TopicServiceImpl implements TopicService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Topic> topicPage =
-            keyword == null ? topicRepository.findAllByProjectPkAndStatus(projectPk, Status.NORMAL,
+            keyword == null ? topicRepository.findAllByProjectPkAndStatusAndProjectStatus(projectPk,
+                Status.NORMAL,
+                Status.NORMAL,
                 pageable)
-                : topicRepository.findByNameContainingOrDescriptionContainingAndProjectPkAndStatus(
+                : topicRepository.findByNameContainingOrDescriptionContainingAndProjectPkAndStatusAndProjectStatus(
                     keyword,
-                    keyword, projectPk, Status.NORMAL,
+                    keyword, projectPk, Status.NORMAL, Status.NORMAL,
                     pageable);
 
         return PageDto.<TopicDto>builder()

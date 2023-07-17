@@ -20,4 +20,6 @@ public interface ProjectService {
         int size);
 
     ProjectPkResponseDto update(Long projectPk, UpdateProjectRequestDto updateProjectRequestDto);
+
+    ProjectPkResponseDto delete(Long projectPk);
 }
