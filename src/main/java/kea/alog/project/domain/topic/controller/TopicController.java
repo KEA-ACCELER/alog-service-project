@@ -1,5 +1,7 @@
 package kea.alog.project.domain.topic.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "tags", description = "태그 API")
 @RequestMapping("/api/projects/{projectPk}/topics")
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class TopicController {
 
     private final TopicService topicService;
 
+    @Operation(summary = "토픽 전체 조회")
     @GetMapping()
     public ResponseDto<PageDto<TopicDto>> findAll(
         // TODO: dto로 param 한 번에 받는 방법
@@ -40,6 +44,7 @@ public class TopicController {
             topicService.findAll(projectPk, keyword, sortType, page, size));
     }
 
+    @Operation(summary = "토픽 상세 조회")
     @GetMapping("/{topicPk}")
     public ResponseDto<TopicDto> findOne(
         @PathVariable("projectPk") Long projectPk,
@@ -47,12 +52,14 @@ public class TopicController {
         return ResponseDto.success(200, topicService.findOne(projectPk, topicPk));
     }
 
+    @Operation(summary = "토픽 생성")
     @PostMapping
     public ResponseDto<TopicPkResponseDto> create(@PathVariable("projectPk") Long projectPk,
         @Valid @RequestBody CreateTopicRequestDto createTopicRequestDto) {
         return ResponseDto.success(201, topicService.create(projectPk, createTopicRequestDto));
     }
 
+    @Operation(summary = "토픽 수정")
     @PatchMapping("/{topicPk}")
     public ResponseDto<TopicPkResponseDto> update(@PathVariable("projectPk") Long projectPk,
         @PathVariable("topicPk") Long topicPk,
@@ -61,6 +68,7 @@ public class TopicController {
             topicService.update(projectPk, topicPk, updateTopicRequestDto));
     }
 
+    @Operation(summary = "토픽 삭제")
     @DeleteMapping("/{topicPk}")
     public ResponseDto delete(@PathVariable("projectPk") Long projectPk,
         @PathVariable("topicPk") Long topicPk) {
