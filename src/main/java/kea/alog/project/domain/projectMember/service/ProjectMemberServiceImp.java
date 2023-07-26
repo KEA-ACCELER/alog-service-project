@@ -1,8 +1,9 @@
 package kea.alog.project.domain.projectMember.service;
 
 import java.util.stream.Collectors;
+import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
-import kea.alog.project.domain.projectMember.dto.response.ProjectMemberDto;
+import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 import kea.alog.project.domain.projectMember.entity.ProjectMember;
 import kea.alog.project.domain.projectMember.mapper.ProjectMemberMapper;
 import kea.alog.project.domain.projectMember.repository.ProjectMemberRepository;
@@ -20,12 +21,13 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
     private final ProjectMemberMapper projectMemberMapper;
 
     @Override
-    public PageDto<ProjectMemberDto> findAll(Long projectPk, String keyword, int page, int size) {
+    public PageDto<ProjectMemberResponseDto> findAll(Long projectPk, String keyword, int page,
+        int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ProjectMember> projectMemberPage = projectMemberRepository.findAllByProjectPk(
-            projectPk, pageable);
+        Page<ProjectMember> projectMemberPage = projectMemberRepository.findAllByProjectPkAndStatus(
+            projectPk, Status.NORMAL, pageable);
 
-        return PageDto.<ProjectMemberDto>builder()
+        return PageDto.<ProjectMemberResponseDto>builder()
                       .content(projectMemberPage.getContent().stream()
                                                 .map(projectMemberMapper::projectMemberToDto)
                                                 .collect(

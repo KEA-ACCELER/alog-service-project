@@ -1,9 +1,9 @@
 package kea.alog.project.domain.projectMember.service;
 
 import kea.alog.project.common.dto.PageDto;
-import kea.alog.project.domain.projectMember.dto.response.ProjectMemberDto;
+import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 
 public interface ProjectMemberService {
 
-    PageDto<ProjectMemberDto> findAll(Long projectPk, String keyword, int page, int size);
+    PageDto<ProjectMemberResponseDto> findAll(Long projectPk, String keyword, int page, int size);
 }
