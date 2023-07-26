@@ -2,7 +2,7 @@ package kea.alog.project.domain.projectMember.controller;
 
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
-import kea.alog.project.domain.projectMember.dto.response.ProjectMemberDto;
+import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 import kea.alog.project.domain.projectMember.service.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class ProjectMemberController {
     private final ProjectMemberService projectMemberService;
 
     @GetMapping("")
-    public ResponseDto<PageDto<ProjectMemberDto>> findAll(
+    public ResponseDto<PageDto<ProjectMemberResponseDto>> findAll(
         @PathVariable("projectPk") Long projectPk,
         @RequestParam(value = "keyword", required = false) String keyword,
         @RequestParam("page") int page,
