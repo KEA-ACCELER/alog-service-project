@@ -1,5 +1,6 @@
 package kea.alog.project.domain.projectMember.service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
@@ -53,11 +54,26 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
 
         Project project = projectService.findByPk(projectPk);
         for (Long userPk : projectMemberRequestDto.getUserPks()) {
-            if (!projectMemberRepository.findByProjectPkAndUserPk(projectPk, userPk).isPresent()) {
+            if (projectMemberRepository.findByProjectPkAndUserPkAndStatus(projectPk, userPk,
+                Status.NORMAL).isEmpty()) {
                 ProjectMember projectMember = ProjectMember.builder().project(project)
                                                            .userPk(userPk)
                                                            .build();
                 projectMemberRepository.save(projectMember);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void remove(Long projectPk, ProjectMemberRequestDto projectMemberRequestDto) {
+        projectService.findByPk(projectPk);
+
+        for (Long userPk : projectMemberRequestDto.getUserPks()) {
+            Optional<ProjectMember> projectMember = projectMemberRepository.findByProjectPkAndUserPkAndStatus(
+                projectPk, userPk, Status.NORMAL);
+            if (projectMember.isPresent()) {
+                projectMember.get().setStatus(Status.DELETED);
             }
         }
     }

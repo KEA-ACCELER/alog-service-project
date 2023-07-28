@@ -9,4 +9,6 @@ public interface ProjectMemberService {
     PageDto<ProjectMemberResponseDto> findAll(Long projectPk, String keyword, int page, int size);
 
     void join(Long projectPk, ProjectMemberRequestDto ProjectMemberRequestDto);
+
+    void remove(Long projectPk, ProjectMemberRequestDto projectMemberRequestDto);
 }
