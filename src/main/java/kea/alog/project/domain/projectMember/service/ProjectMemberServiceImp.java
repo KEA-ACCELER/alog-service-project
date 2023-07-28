@@ -5,7 +5,7 @@ import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.service.ProjectService;
-import kea.alog.project.domain.projectMember.dto.request.JoinProjectMemberRequestDto;
+import kea.alog.project.domain.projectMember.dto.request.ProjectMemberRequestDto;
 import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 import kea.alog.project.domain.projectMember.entity.ProjectMember;
 import kea.alog.project.domain.projectMember.mapper.ProjectMemberMapper;
@@ -48,11 +48,11 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
 
     @Override
     @Transactional
-    public void join(Long projectPk, JoinProjectMemberRequestDto joinProjectMemberRequestDto) {
+    public void join(Long projectPk, ProjectMemberRequestDto projectMemberRequestDto) {
         projectService.findByPk(projectPk);
 
         Project project = projectService.findByPk(projectPk);
-        for (Long userPk : joinProjectMemberRequestDto.getUserPks()) {
+        for (Long userPk : projectMemberRequestDto.getUserPks()) {
             if (!projectMemberRepository.findByProjectPkAndUserPk(projectPk, userPk).isPresent()) {
                 ProjectMember projectMember = ProjectMember.builder().project(project)
                                                            .userPk(userPk)
