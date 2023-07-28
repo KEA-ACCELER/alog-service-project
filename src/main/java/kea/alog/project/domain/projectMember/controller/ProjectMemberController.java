@@ -33,7 +33,7 @@ public class ProjectMemberController {
     }
 
     @PostMapping("")
-    public ResponseDto<Object> join(@PathVariable("projectPk") Long projectPk,
+    public ResponseDto join(@PathVariable("projectPk") Long projectPk,
         @RequestBody() JoinProjectMemberRequestDto joinProjectMemberRequestDto) {
         projectMemberService.join(projectPk, joinProjectMemberRequestDto);
         return ResponseDto.success(201);
