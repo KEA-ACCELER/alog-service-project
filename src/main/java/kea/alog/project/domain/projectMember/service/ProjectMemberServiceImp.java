@@ -3,7 +3,9 @@ package kea.alog.project.domain.projectMember.service;
 import java.util.stream.Collectors;
 import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
+import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.service.ProjectService;
+import kea.alog.project.domain.projectMember.dto.request.JoinProjectMemberRequestDto;
 import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 import kea.alog.project.domain.projectMember.entity.ProjectMember;
 import kea.alog.project.domain.projectMember.mapper.ProjectMemberMapper;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +44,21 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
                       .pageNumber(projectMemberPage.getNumber())
                       .pageSize(projectMemberPage.getSize())
                       .build();
+    }
+
+    @Override
+    @Transactional
+    public void join(Long projectPk, JoinProjectMemberRequestDto joinProjectMemberRequestDto) {
+        projectService.findByPk(projectPk);
+
+        Project project = projectService.findByPk(projectPk);
+        for (Long userPk : joinProjectMemberRequestDto.getUserPks()) {
+            if (!projectMemberRepository.findByProjectPkAndUserPk(projectPk, userPk).isPresent()) {
+                ProjectMember projectMember = ProjectMember.builder().project(project)
+                                                           .userPk(userPk)
+                                                           .build();
+                projectMemberRepository.save(projectMember);
+            }
+        }
     }
 }
