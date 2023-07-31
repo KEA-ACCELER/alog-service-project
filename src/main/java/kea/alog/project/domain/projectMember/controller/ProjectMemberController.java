@@ -2,10 +2,11 @@ package kea.alog.project.domain.projectMember.controller;
 
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
-import kea.alog.project.domain.projectMember.dto.request.JoinProjectMemberRequestDto;
+import kea.alog.project.domain.projectMember.dto.request.ProjectMemberRequestDto;
 import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 import kea.alog.project.domain.projectMember.service.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +35,15 @@ public class ProjectMemberController {
 
     @PostMapping("")
     public ResponseDto join(@PathVariable("projectPk") Long projectPk,
-        @RequestBody() JoinProjectMemberRequestDto joinProjectMemberRequestDto) {
-        projectMemberService.join(projectPk, joinProjectMemberRequestDto);
+        @RequestBody() ProjectMemberRequestDto projectMemberRequestDto) {
+        projectMemberService.join(projectPk, projectMemberRequestDto);
         return ResponseDto.success(201);
+    }
+
+    @DeleteMapping("")
+    public ResponseDto delete(@PathVariable("projectPk") Long projectPk,
+        @RequestBody() ProjectMemberRequestDto projectMemberRequestDto) {
+        projectMemberService.remove(projectPk, projectMemberRequestDto);
+        return ResponseDto.success(204);
     }
 }

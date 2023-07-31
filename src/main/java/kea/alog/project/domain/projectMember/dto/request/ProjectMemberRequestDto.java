@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import lombok.Getter;
 
 @Getter
-public class JoinProjectMemberRequestDto {
+public class ProjectMemberRequestDto {
 
     @NotNull
     ArrayList<Long> userPks;

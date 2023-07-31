@@ -1,11 +1,12 @@
 package kea.alog.project.domain.projectMember.service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.service.ProjectService;
-import kea.alog.project.domain.projectMember.dto.request.JoinProjectMemberRequestDto;
+import kea.alog.project.domain.projectMember.dto.request.ProjectMemberRequestDto;
 import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 import kea.alog.project.domain.projectMember.entity.ProjectMember;
 import kea.alog.project.domain.projectMember.mapper.ProjectMemberMapper;
@@ -48,16 +49,31 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
 
     @Override
     @Transactional
-    public void join(Long projectPk, JoinProjectMemberRequestDto joinProjectMemberRequestDto) {
+    public void join(Long projectPk, ProjectMemberRequestDto projectMemberRequestDto) {
         projectService.findByPk(projectPk);
 
         Project project = projectService.findByPk(projectPk);
-        for (Long userPk : joinProjectMemberRequestDto.getUserPks()) {
-            if (!projectMemberRepository.findByProjectPkAndUserPk(projectPk, userPk).isPresent()) {
+        for (Long userPk : projectMemberRequestDto.getUserPks()) {
+            if (projectMemberRepository.findByProjectPkAndUserPkAndStatus(projectPk, userPk,
+                Status.NORMAL).isEmpty()) {
                 ProjectMember projectMember = ProjectMember.builder().project(project)
                                                            .userPk(userPk)
                                                            .build();
                 projectMemberRepository.save(projectMember);
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void remove(Long projectPk, ProjectMemberRequestDto projectMemberRequestDto) {
+        projectService.findByPk(projectPk);
+
+        for (Long userPk : projectMemberRequestDto.getUserPks()) {
+            Optional<ProjectMember> projectMember = projectMemberRepository.findByProjectPkAndUserPkAndStatus(
+                projectPk, userPk, Status.NORMAL);
+            if (projectMember.isPresent()) {
+                projectMember.get().setStatus(Status.DELETED);
             }
         }
     }
