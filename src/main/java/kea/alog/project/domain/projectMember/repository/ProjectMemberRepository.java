@@ -1,5 +1,6 @@
 package kea.alog.project.domain.projectMember.repository;
 
+import java.util.Optional;
 import kea.alog.project.common.constant.Status;
 import kea.alog.project.domain.projectMember.entity.ProjectMember;
 import org.springframework.data.domain.Page;
@@ -12,4 +13,6 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
 
     Page<ProjectMember> findAllByProjectPkAndStatus(Long projectPk, Status status,
         Pageable pageable);
+
+    Optional<ProjectMember> findByProjectPkAndUserPk(Long projectPk, Long userPk);
 }

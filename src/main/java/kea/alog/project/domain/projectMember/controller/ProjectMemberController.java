@@ -2,11 +2,14 @@ package kea.alog.project.domain.projectMember.controller;
 
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
+import kea.alog.project.domain.projectMember.dto.request.JoinProjectMemberRequestDto;
 import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 import kea.alog.project.domain.projectMember.service.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,5 +30,12 @@ public class ProjectMemberController {
     ) {
         return ResponseDto.success(200,
             projectMemberService.findAll(projectPk, keyword, page, size));
+    }
+
+    @PostMapping("")
+    public ResponseDto join(@PathVariable("projectPk") Long projectPk,
+        @RequestBody() JoinProjectMemberRequestDto joinProjectMemberRequestDto) {
+        projectMemberService.join(projectPk, joinProjectMemberRequestDto);
+        return ResponseDto.success(201);
     }
 }

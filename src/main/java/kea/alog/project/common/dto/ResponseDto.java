@@ -15,6 +15,12 @@ public class ResponseDto<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
+    public static ResponseDto success(int code) {
+        return ResponseDto.builder()
+                          .code(code)
+                          .build();
+    }
+
     public static <T> ResponseDto<T> success(int code, T data) {
         return ResponseDto.<T>builder()
                           .code(code)
