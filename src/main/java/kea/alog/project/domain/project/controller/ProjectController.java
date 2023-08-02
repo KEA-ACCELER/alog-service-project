@@ -55,16 +55,18 @@ public class ProjectController {
 
     @Operation(summary = "프로젝트 수정")
     @PatchMapping("/{projectPk}")
-    public ResponseDto<ProjectPkResponseDto> update(
+    public ResponseDto update(
         @PathVariable("projectPk") Long projectPk,
         @Valid @RequestBody UpdateProjectRequestDto updateProjectRequestDto
     ) {
-        return ResponseDto.success(200, projectService.update(projectPk, updateProjectRequestDto));
+        projectService.update(projectPk, updateProjectRequestDto);
+        return ResponseDto.success(200);
     }
 
     @Operation(summary = "프로젝트 삭제")
     @DeleteMapping("/{projectPk}")
-    public ResponseDto<ProjectPkResponseDto> delete(@PathVariable("projectPk") Long projectPk) {
-        return ResponseDto.success(200, projectService.delete(projectPk));
+    public ResponseDto delete(@PathVariable("projectPk") Long projectPk) {
+        projectService.delete(projectPk);
+        return ResponseDto.success(204);
     }
 }

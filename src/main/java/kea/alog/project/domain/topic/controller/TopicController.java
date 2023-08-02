@@ -61,18 +61,19 @@ public class TopicController {
 
     @Operation(summary = "토픽 수정")
     @PatchMapping("/{topicPk}")
-    public ResponseDto<TopicPkResponseDto> update(@PathVariable("projectPk") Long projectPk,
+    public ResponseDto update(@PathVariable("projectPk") Long projectPk,
         @PathVariable("topicPk") Long topicPk,
         @RequestBody UpdateTopicRequestDto updateTopicRequestDto) {
-        return ResponseDto.success(200,
-            topicService.update(projectPk, topicPk, updateTopicRequestDto));
+        topicService.update(projectPk, topicPk, updateTopicRequestDto);
+        return ResponseDto.success(200);
     }
 
     @Operation(summary = "토픽 삭제")
     @DeleteMapping("/{topicPk}")
     public ResponseDto delete(@PathVariable("projectPk") Long projectPk,
         @PathVariable("topicPk") Long topicPk) {
-        return ResponseDto.success(200, topicService.delete(projectPk, topicPk));
+        topicService.delete(projectPk, topicPk);
+        return ResponseDto.success(200);
     }
 
 }

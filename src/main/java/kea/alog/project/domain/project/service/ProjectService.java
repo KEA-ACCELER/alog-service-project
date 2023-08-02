@@ -19,7 +19,7 @@ public interface ProjectService {
     PageDto<ProjectDto> findAll(String keyword, ProjectSortType sortType, int page,
         int size);
 
-    ProjectPkResponseDto update(Long projectPk, UpdateProjectRequestDto updateProjectRequestDto);
+    void update(Long projectPk, UpdateProjectRequestDto updateProjectRequestDto);
 
-    ProjectPkResponseDto delete(Long projectPk);
+    void delete(Long projectPk);
 }
