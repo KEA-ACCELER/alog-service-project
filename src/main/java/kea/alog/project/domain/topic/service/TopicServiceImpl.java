@@ -100,23 +100,19 @@ public class TopicServiceImpl implements TopicService {
 
     @Transactional
     @Override
-    public TopicPkResponseDto update(Long projectPk, Long topicPk,
+    public void update(Long projectPk, Long topicPk,
         UpdateTopicRequestDto updateTopicRequestDto) {
         Topic topic = findByProjectPkAndTopicPk(projectPk, topicPk);
 
         topicMapper.updateTopicFromDto(updateTopicRequestDto, topic);
-
-        return TopicPkResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
 
     @Transactional
     @Override
-    public TopicPkResponseDto delete(Long projectPk, Long topicPk) {
+    public void delete(Long projectPk, Long topicPk) {
         Topic topic = findByProjectPkAndTopicPk(projectPk, topicPk);
 
         topic.setStatus(Status.DELETED);
         topicRepository.save(topic);
-
-        return TopicPkResponseDto.builder().topicPk(topicPk).projectPk(projectPk).build();
     }
 }

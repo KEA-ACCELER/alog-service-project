@@ -20,8 +20,8 @@ public interface TopicService {
     TopicPkResponseDto create(Long projectPk,
         CreateTopicRequestDto createTopicRequestDto);
 
-    TopicPkResponseDto update(Long projectPk, Long topicPk,
+    void update(Long projectPk, Long topicPk,
         UpdateTopicRequestDto updateTopicRequestDto);
 
-    TopicPkResponseDto delete(Long projectPk, Long topicPk);
+    void delete(Long projectPk, Long topicPk);
 }
