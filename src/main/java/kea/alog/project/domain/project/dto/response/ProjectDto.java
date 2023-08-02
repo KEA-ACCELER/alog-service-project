@@ -11,6 +11,7 @@ import lombok.Getter;
 @Builder
 public class ProjectDto {
 
+    private Long pk;
     private String name;
     private String description;
     private Long teamPk;
