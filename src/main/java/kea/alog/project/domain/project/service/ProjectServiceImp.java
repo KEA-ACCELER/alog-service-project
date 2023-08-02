@@ -78,22 +78,19 @@ public class ProjectServiceImp implements ProjectService {
 
     @Transactional
     @Override
-    public ProjectPkResponseDto update(Long projectPk,
+    public void update(Long projectPk,
         UpdateProjectRequestDto updateProjectRequestDto) {
         Project project = findByPk(projectPk);
 
         projectMapper.updateProjectFromDto(updateProjectRequestDto, project);
-
-        return ProjectPkResponseDto.builder().projectPk(projectPk).build();
     }
 
+    @Transactional
     @Override
-    public ProjectPkResponseDto delete(Long projectPk) {
+    public void delete(Long projectPk) {
         Project project = findByPk(projectPk);
         project.setStatus(Status.DELETED);
         projectRepository.save(project);
-
-        return ProjectPkResponseDto.builder().projectPk(projectPk).build();
     }
 
     private Sort getSort(ProjectSortType sortType) {
