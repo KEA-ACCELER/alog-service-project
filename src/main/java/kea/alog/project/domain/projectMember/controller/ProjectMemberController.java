@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
 import kea.alog.project.domain.projectMember.dto.request.ProjectMemberRequestDto;
-import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 import kea.alog.project.domain.projectMember.service.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +26,7 @@ public class ProjectMemberController {
 
     @Operation(summary = "프로젝트 멤버 전체 조회")
     @GetMapping("")
-    public ResponseDto<PageDto<ProjectMemberResponseDto>> findAll(
+    public ResponseDto<PageDto<Long>> findAll(
         @PathVariable("projectPk") Long projectPk,
         @RequestParam(value = "keyword", required = false) String keyword,
         @RequestParam("page") int page,
