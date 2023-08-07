@@ -1,6 +1,8 @@
 package kea.alog.project.domain.project.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "projects", description = "프로젝트 API")
 @RequestMapping("/api/projects")
 @RestController
 @RequiredArgsConstructor
@@ -28,12 +31,14 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+    @Operation(summary = "프로젝트 생성")
     @PostMapping()
     public ResponseDto<ProjectPkResponseDto> create(
         @Valid @RequestBody CreateProjectRequestDto createProjectRequestDto) {
         return ResponseDto.success(201, projectService.create(createProjectRequestDto));
     }
 
+    @Operation(summary = "프로젝트 전체 조회")
     @GetMapping()
     public ResponseDto<PageDto<ProjectDto>> findAll(
         @RequestParam(value = "keyword", required = false) String keyword,
@@ -42,21 +47,26 @@ public class ProjectController {
         return ResponseDto.success(200, projectService.findAll(keyword, sortType, page, size));
     }
 
+    @Operation(summary = "프로젝트 상세 조회")
     @GetMapping("/{projectPk}")
     public ResponseDto<ProjectDto> findOne(@PathVariable("projectPk") Long projectPk) {
         return ResponseDto.success(200, projectService.findOne(projectPk));
     }
 
+    @Operation(summary = "프로젝트 수정")
     @PatchMapping("/{projectPk}")
-    public ResponseDto<ProjectPkResponseDto> update(
+    public ResponseDto update(
         @PathVariable("projectPk") Long projectPk,
         @Valid @RequestBody UpdateProjectRequestDto updateProjectRequestDto
     ) {
-        return ResponseDto.success(200, projectService.update(projectPk, updateProjectRequestDto));
+        projectService.update(projectPk, updateProjectRequestDto);
+        return ResponseDto.success(200);
     }
 
+    @Operation(summary = "프로젝트 삭제")
     @DeleteMapping("/{projectPk}")
-    public ResponseDto<ProjectPkResponseDto> delete(@PathVariable("projectPk") Long projectPk) {
-        return ResponseDto.success(200, projectService.delete(projectPk));
+    public ResponseDto delete(@PathVariable("projectPk") Long projectPk) {
+        projectService.delete(projectPk);
+        return ResponseDto.success(204);
     }
 }

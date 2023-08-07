@@ -1,8 +1,11 @@
 package kea.alog.project.domain.project.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import kea.alog.project.domain.project.dto.request.UpdateProjectRequestDto;
 import kea.alog.project.domain.project.dto.response.ProjectDto;
 import kea.alog.project.domain.project.entity.Project;
+import kea.alog.project.domain.projectMember.entity.ProjectMember;
 import kea.alog.project.domain.topic.mapper.TopicMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,11 +16,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, uses = TopicMapper.class)
-public interface ProjectMapper {
+public abstract class ProjectMapper {
 
-    @Mapping(target = "topics", source = "topics")
-    ProjectDto projectToDto(Project project);
+    @Mapping(target = "topics", source = "project.topics")
+    @Mapping(target = "projectMembers", source = "project.projectMembers")
+    public abstract ProjectDto projectToDto(Project project);
 
-    void updateProjectFromDto(UpdateProjectRequestDto updateProjectRequestDto,
+    public abstract void updateProjectFromDto(UpdateProjectRequestDto updateProjectRequestDto,
         @MappingTarget Project project);
+
+    protected List<Long> mapProjectMembers(List<ProjectMember> projectMembers) {
+        return projectMembers.stream()
+                             .map(ProjectMember::getUserPk)
+                             .collect(Collectors.toList());
+    }
 }
+
