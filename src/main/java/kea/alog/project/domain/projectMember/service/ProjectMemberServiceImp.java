@@ -7,9 +7,7 @@ import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.service.ProjectService;
 import kea.alog.project.domain.projectMember.dto.request.ProjectMemberRequestDto;
-import kea.alog.project.domain.projectMember.dto.response.ProjectMemberResponseDto;
 import kea.alog.project.domain.projectMember.entity.ProjectMember;
-import kea.alog.project.domain.projectMember.mapper.ProjectMemberMapper;
 import kea.alog.project.domain.projectMember.repository.ProjectMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,10 +22,9 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
 
     private final ProjectService projectService;
     private final ProjectMemberRepository projectMemberRepository;
-    private final ProjectMemberMapper projectMemberMapper;
 
     @Override
-    public PageDto<ProjectMemberResponseDto> findAll(Long projectPk, String keyword, int page,
+    public PageDto<Long> findAll(Long projectPk, String keyword, int page,
         int size) {
 
         projectService.findByPk(projectPk);
@@ -35,11 +32,10 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
         Page<ProjectMember> projectMemberPage = projectMemberRepository.findAllByProjectPkAndStatus(
             projectPk, Status.NORMAL, pageable);
 
-        return PageDto.<ProjectMemberResponseDto>builder()
+        return PageDto.<Long>builder()
                       .content(projectMemberPage.getContent().stream()
-                                                .map(projectMemberMapper::projectMemberToDto)
-                                                .collect(
-                                                    Collectors.toList()))
+                                                .map(ProjectMember::getUserPk)
+                                                .collect(Collectors.toList()))
                       .totalPages(projectMemberPage.getTotalPages())
                       .totalElements(projectMemberPage.getTotalElements())
                       .pageNumber(projectMemberPage.getNumber())
