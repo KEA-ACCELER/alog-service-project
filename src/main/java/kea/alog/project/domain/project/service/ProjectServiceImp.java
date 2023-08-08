@@ -31,7 +31,8 @@ public class ProjectServiceImp implements ProjectService {
     @Override
     public Project findByPk(Long projectPk) {
         return projectRepository.findByPkAndStatus(projectPk, Status.NORMAL)
-                                .orElseThrow(() -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
+                                .orElseThrow(
+                                    () -> new EntityNotFoundException(404, "ENTITY_NOT_FOUND"));
     }
 
     @Override

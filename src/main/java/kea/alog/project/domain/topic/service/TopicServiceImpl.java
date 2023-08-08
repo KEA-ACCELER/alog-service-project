@@ -34,7 +34,7 @@ public class TopicServiceImpl implements TopicService {
     public Topic findByProjectPkAndTopicPk(Long projectPk, Long topicPk) {
         return topicRepository.findByPkAndProjectPkAndStatusAndProjectStatus(topicPk, projectPk,
             Status.NORMAL, Status.NORMAL).orElseThrow(
-            () -> new EntityNotFoundException("ENTITY_NOT_FOUND"));
+            () -> new EntityNotFoundException(404, "ENTITY_NOT_FOUND"));
     }
 
     @Override
