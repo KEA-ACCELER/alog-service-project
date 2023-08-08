@@ -7,7 +7,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=
       - SPRING_DATASOURCE_PASSWORD=
     ports:
-      - "30000:8080"
+      - "30000:8083"
     depends_on:
       db:
         condition: service_healthy
@@ -17,7 +17,7 @@ services:
       - MYSQL_DATABASE=
       - MYSQL_ROOT_PASSWORD=
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: 10s
       timeout: 2s
       retries: 10
