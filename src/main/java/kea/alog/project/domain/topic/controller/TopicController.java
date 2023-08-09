@@ -2,9 +2,11 @@ package kea.alog.project.domain.topic.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
+import kea.alog.project.common.dto.TokenPayloadDto;
 import kea.alog.project.domain.topic.constant.TopicSortType;
 import kea.alog.project.domain.topic.dto.request.CreateTopicRequestDto;
 import kea.alog.project.domain.topic.dto.request.UpdateTopicRequestDto;
@@ -54,9 +56,12 @@ public class TopicController {
 
     @Operation(summary = "토픽 생성")
     @PostMapping
-    public ResponseDto<TopicPkResponseDto> create(@PathVariable("projectPk") Long projectPk,
+    public ResponseDto<TopicPkResponseDto> create(
+        HttpServletRequest request, @PathVariable("projectPk") Long projectPk,
         @Valid @RequestBody CreateTopicRequestDto createTopicRequestDto) {
-        return ResponseDto.success(201, topicService.create(projectPk, createTopicRequestDto));
+        TokenPayloadDto userInfo = (TokenPayloadDto) request.getAttribute("user");
+        return ResponseDto.success(201,
+            topicService.create(projectPk, userInfo.getUserPk(), createTopicRequestDto));
     }
 
     @Operation(summary = "토픽 수정")

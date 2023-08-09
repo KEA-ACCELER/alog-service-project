@@ -14,7 +14,7 @@ public interface ProjectService {
 
     ProjectDto findOne(Long projectPk);
 
-    ProjectPkResponseDto create(CreateProjectRequestDto createProjectRequestDto);
+    ProjectPkResponseDto create(Long userPk, CreateProjectRequestDto createProjectRequestDto);
 
     PageDto<ProjectDto> findAll(String keyword, ProjectSortType sortType, int page,
         int size);

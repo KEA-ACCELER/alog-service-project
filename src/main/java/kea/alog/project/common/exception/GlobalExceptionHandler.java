@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
     ) {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-            ResponseDto.fail(404, "ENTITY_NOT_FOUND")
+            ResponseDto.fail(e.getCode(), e.getMessage())
         );
     }
 

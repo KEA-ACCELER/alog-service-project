@@ -12,6 +12,4 @@ public class CreateProjectRequestDto {
     private String description;
     @NotNull
     private Long teamPk;
-    @NotNull
-    private Long pmPk;
 }
