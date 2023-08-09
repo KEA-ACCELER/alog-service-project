@@ -1,5 +1,6 @@
 package kea.alog.project.domain.project.service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
@@ -7,11 +8,14 @@ import kea.alog.project.common.exception.EntityNotFoundException;
 import kea.alog.project.domain.project.constant.ProjectSortType;
 import kea.alog.project.domain.project.dto.request.CreateProjectRequestDto;
 import kea.alog.project.domain.project.dto.request.UpdateProjectRequestDto;
+import kea.alog.project.domain.project.dto.response.MyProjectDto;
 import kea.alog.project.domain.project.dto.response.ProjectDto;
 import kea.alog.project.domain.project.dto.response.ProjectPkResponseDto;
 import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.mapper.ProjectMapper;
 import kea.alog.project.domain.project.repository.ProjectRepository;
+import kea.alog.project.domain.projectMember.entity.ProjectMember;
+import kea.alog.project.domain.projectMember.repository.ProjectMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectServiceImp implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final ProjectMemberRepository projectMemberRepository;
     private final ProjectMapper projectMapper;
 
     @Override
@@ -95,10 +100,60 @@ public class ProjectServiceImp implements ProjectService {
         projectRepository.save(project);
     }
 
+    @Override
+    public PageDto<MyProjectDto> findMine(Long userPk, String keyword, ProjectSortType sortType,
+        int page, int size) {
+        Sort sort = getSort(sortType);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        if (keyword == null) {
+            return findMineWithoutKeyword(userPk, pageable);
+        }
+
+        return findMineWithKeyword(userPk, keyword, pageable);
+    }
+
     private Sort getSort(ProjectSortType sortType) {
         return switch (sortType) {
             case ASC -> Sort.by(Direction.ASC, "createdAt");
             case DESC -> Sort.by(Direction.DESC, "createdAt");
         };
+    }
+
+    private PageDto<MyProjectDto> findMineWithoutKeyword(Long userPk, Pageable pageable) {
+        Page<ProjectMember> projectMemberPage = projectMemberRepository.findByUserPkAndStatus(
+            userPk, Status.NORMAL, pageable);
+
+        List<Project> projects = projectMemberPage.getContent().stream()
+                                                  .map(projectMember -> projectMember.getProject())
+                                                  .toList();
+
+        return PageDto.<MyProjectDto>builder()
+                      .content(
+                          projects.stream().map(projectMapper::projectToMyProjectDto)
+                                  .collect(Collectors.toList()))
+                      .totalPages(projectMemberPage.getTotalPages())
+                      .totalElements(projectMemberPage.getTotalElements())
+                      .pageNumber(projectMemberPage.getNumber())
+                      .pageSize(projectMemberPage.getSize())
+                      .build();
+    }
+
+    private PageDto<MyProjectDto> findMineWithKeyword(Long userPk, String keyword,
+        Pageable pageable) {
+        Page<Project> projectPage = projectRepository.findByProjectMembersUserPkAndProjectMembersStatusAndNameContaining(
+            userPk,
+            Status.NORMAL, keyword, pageable);
+
+        return PageDto.<MyProjectDto>builder()
+                      .content(
+                          projectPage.getContent().stream()
+                                     .map(projectMapper::projectToMyProjectDto)
+                                     .collect(Collectors.toList()))
+                      .totalPages(projectPage.getTotalPages())
+                      .totalElements(projectPage.getTotalElements())
+                      .pageNumber(projectPage.getNumber())
+                      .pageSize(projectPage.getSize())
+                      .build();
     }
 }
