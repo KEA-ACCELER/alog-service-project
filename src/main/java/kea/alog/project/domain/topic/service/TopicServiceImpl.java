@@ -83,12 +83,13 @@ public class TopicServiceImpl implements TopicService {
 
     @Transactional
     @Override
-    public TopicPkResponseDto create(Long projectPk,
+    public TopicPkResponseDto create(Long projectPk, Long userPk,
         CreateTopicRequestDto createTopicRequestDto) {
         Project project = projectService.findByPk(projectPk);
 
         Topic topic = topicRepository.save(Topic.builder()
                                                 .project(project)
+                                                .userPk(userPk)
                                                 .name(createTopicRequestDto.getName())
                                                 .description(createTopicRequestDto.getDescription())
                                                 .startDate(createTopicRequestDto.getStartDate())

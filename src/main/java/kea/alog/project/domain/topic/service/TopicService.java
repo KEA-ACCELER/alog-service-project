@@ -17,7 +17,7 @@ public interface TopicService {
 
     TopicDto findOne(Long projectPk, Long topicPk);
 
-    TopicPkResponseDto create(Long projectPk,
+    TopicPkResponseDto create(Long projectPk, Long userPk,
         CreateTopicRequestDto createTopicRequestDto);
 
     void update(Long projectPk, Long topicPk,
