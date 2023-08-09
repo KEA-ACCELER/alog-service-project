@@ -18,4 +18,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Page<Project> findAllByNameContainingOrDescriptionContainingAndStatus(String name,
         String description,
         Status status, Pageable pageable);
+
+    Page<Project> findByProjectMembersUserPkAndProjectMembersStatusAndNameContaining(Long userPk,
+        Status status,
+        String keyword,
+        Pageable pageable);
 }

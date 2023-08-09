@@ -74,4 +74,16 @@ public class ProjectController {
         projectService.delete(projectPk);
         return ResponseDto.success(204);
     }
+
+
+    @Operation(summary = "내가 속한 프로젝트 조회")
+    @GetMapping("mine")
+    public ResponseDto findMine(HttpServletRequest request,
+        @RequestParam(value = "keyword", required = false) String keyword,
+        @RequestParam("sortType") ProjectSortType sortType, @RequestParam("page") int page,
+        @RequestParam("size") int size) {
+        TokenPayloadDto userInfo = (TokenPayloadDto) request.getAttribute("user");
+        return ResponseDto.success(200,
+            projectService.findMine(userInfo.getUserPk(), keyword, sortType, page, size));
+    }
 }
