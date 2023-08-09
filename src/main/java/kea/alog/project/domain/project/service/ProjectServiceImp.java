@@ -56,6 +56,9 @@ public class ProjectServiceImp implements ProjectService {
 
         Long projectPk = projectRepository.save(project).getPk();
 
+        ProjectMember projectMember = ProjectMember.builder().userPk(userPk).project(project)
+                                                   .build();
+        projectMemberRepository.save(projectMember);
         return ProjectPkResponseDto.builder().projectPk(projectPk).build();
     }
 
