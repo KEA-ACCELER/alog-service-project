@@ -42,11 +42,12 @@ public class ProjectServiceImp implements ProjectService {
 
     @Transactional
     @Override
-    public ProjectPkResponseDto create(CreateProjectRequestDto createProjectRequestDto) {
+    public ProjectPkResponseDto create(Long userPk,
+        CreateProjectRequestDto createProjectRequestDto) {
         Project project = Project.builder().name(createProjectRequestDto.getName())
                                  .description(createProjectRequestDto.getDescription())
                                  .teamPk(createProjectRequestDto.getTeamPk())
-                                 .pmPk(createProjectRequestDto.getPmPk()).build();
+                                 .pmPk(userPk).build();
 
         Long projectPk = projectRepository.save(project).getPk();
 

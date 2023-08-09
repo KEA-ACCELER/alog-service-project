@@ -3,9 +3,11 @@ package kea.alog.project.domain.project.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
+import kea.alog.project.common.dto.TokenPayloadDto;
 import kea.alog.project.domain.project.constant.ProjectSortType;
 import kea.alog.project.domain.project.dto.request.CreateProjectRequestDto;
 import kea.alog.project.domain.project.dto.request.UpdateProjectRequestDto;
@@ -34,8 +36,11 @@ public class ProjectController {
     @Operation(summary = "프로젝트 생성")
     @PostMapping()
     public ResponseDto<ProjectPkResponseDto> create(
+        HttpServletRequest request,
         @Valid @RequestBody CreateProjectRequestDto createProjectRequestDto) {
-        return ResponseDto.success(201, projectService.create(createProjectRequestDto));
+        TokenPayloadDto userInfo = (TokenPayloadDto) request.getAttribute("user");
+        return ResponseDto.success(201,
+            projectService.create(userInfo.getUserPk(), createProjectRequestDto));
     }
 
     @Operation(summary = "프로젝트 전체 조회")

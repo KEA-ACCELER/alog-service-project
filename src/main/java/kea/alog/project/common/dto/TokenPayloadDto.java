@@ -7,5 +7,5 @@ public class TokenPayloadDto {
 
     private String userNN;
     private String userEmail;
-    private int userPk;
+    private Long userPk;
 }
