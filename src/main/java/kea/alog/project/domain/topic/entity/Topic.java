@@ -38,6 +38,10 @@ public class Topic extends BaseEntity implements Serializable {
     @NotNull
     private Project project;
 
+    @Column(name = "user_pk")
+    @NotNull
+    private Long userPk;
+
     @Column(name = "name", length = 60)
     @NotNull
     private String name;
@@ -55,9 +59,10 @@ public class Topic extends BaseEntity implements Serializable {
     private LocalDateTime dueDate;
 
     @Builder
-    public Topic(Project project, String name, String description,
+    public Topic(Project project, Long userPk, String name, String description,
         LocalDateTime startDate, LocalDateTime dueDate) {
         this.project = project;
+        this.userPk = userPk;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
