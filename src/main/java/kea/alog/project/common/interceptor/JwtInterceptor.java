@@ -20,7 +20,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         Object handler) throws JsonProcessingException {
         String token = request.getHeader("Authorization");
         if (token == null) {
-            throw new UnauthorizationException(403, "AUTHORIZATION");
+            throw new UnauthorizationException(403, "UNAUTHORIZATION");
         }
         String payload = jwtProvider.getPayload(token.replace("Bearer ", ""));
         TokenPayloadDto user = jwtProvider.getUserInfo(payload);
