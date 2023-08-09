@@ -1,5 +1,6 @@
 package kea.alog.project.config;
 
+import java.util.Arrays;
 import kea.alog.project.common.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()   // token 사용 방식이라 csrf disable
+        http.cors()
+            .and()
+            .csrf().disable()   // token 사용 방식이라 csrf disable
             .exceptionHandling()
             .and()
             .headers()
@@ -48,14 +51,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.setAllowCredentials(true);
-
+        configuration.setAllowedOrigins(
+            Arrays.asList("http://localhost:3000", "http://127.0.0.1:3000",
+                "https://alog.acceler.kr"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
