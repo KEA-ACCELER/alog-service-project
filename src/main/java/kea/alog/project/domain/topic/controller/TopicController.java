@@ -99,7 +99,7 @@ public class TopicController {
 
     @Operation(summary = "토픽 삭제")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "204", description = "성공"),
         @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 토픽 pk", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
@@ -107,7 +107,7 @@ public class TopicController {
     public ResponseDto delete(@PathVariable("projectPk") Long projectPk,
         @PathVariable("topicPk") Long topicPk) {
         topicService.delete(projectPk, topicPk);
-        return ResponseDto.success(200);
+        return ResponseDto.success(204);
     }
 
 }
