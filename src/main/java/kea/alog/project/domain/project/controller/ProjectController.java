@@ -15,6 +15,7 @@ import kea.alog.project.common.dto.TokenPayloadDto;
 import kea.alog.project.domain.project.constant.ProjectSortType;
 import kea.alog.project.domain.project.dto.request.CreateProjectRequestDto;
 import kea.alog.project.domain.project.dto.request.UpdateProjectRequestDto;
+import kea.alog.project.domain.project.dto.response.MyProjectDto;
 import kea.alog.project.domain.project.dto.response.ProjectDto;
 import kea.alog.project.domain.project.dto.response.ProjectPkResponseDto;
 import kea.alog.project.domain.project.service.ProjectService;
@@ -112,7 +113,7 @@ public class ProjectController {
         @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     })
     @GetMapping("mine")
-    public ResponseDto findMine(HttpServletRequest request,
+    public ResponseDto<PageDto<MyProjectDto>> findMine(HttpServletRequest request,
         @RequestParam(value = "keyword", required = false) String keyword,
         @RequestParam("sortType") ProjectSortType sortType, @RequestParam("page") int page,
         @RequestParam("size") int size) {
