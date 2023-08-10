@@ -1,6 +1,10 @@
 package kea.alog.project.domain.projectMember.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.dto.ResponseDto;
@@ -25,6 +29,12 @@ public class ProjectMemberController {
     private final ProjectMemberService projectMemberService;
 
     @Operation(summary = "프로젝트 멤버 전체 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "400", description = "유효하지 않은 request", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 프로젝트 pk", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
     @GetMapping("")
     public ResponseDto<PageDto<Long>> findAll(
         @PathVariable("projectPk") Long projectPk,
@@ -37,6 +47,11 @@ public class ProjectMemberController {
     }
 
     @Operation(summary = "프로젝트 멤버 등록")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "성공"),
+        @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 프로젝트 pk", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
     @PostMapping("")
     public ResponseDto join(@PathVariable("projectPk") Long projectPk,
         @RequestBody() ProjectMemberRequestDto projectMemberRequestDto) {
@@ -45,6 +60,11 @@ public class ProjectMemberController {
     }
 
     @Operation(summary = "프로젝트 멤버 삭제")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "성공"),
+        @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 프로젝트 pk", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
     @DeleteMapping("")
     public ResponseDto delete(@PathVariable("projectPk") Long projectPk,
         @RequestBody() ProjectMemberRequestDto projectMemberRequestDto) {

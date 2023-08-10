@@ -2,6 +2,10 @@ package kea.alog.project.domain.project.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -34,6 +38,11 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @Operation(summary = "프로젝트 생성")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "성공"),
+        @ApiResponse(responseCode = "400", description = "유효하지 않은 request", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
     @PostMapping()
     public ResponseDto<ProjectPkResponseDto> create(
         HttpServletRequest request,
@@ -44,6 +53,11 @@ public class ProjectController {
     }
 
     @Operation(summary = "프로젝트 전체 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "400", description = "유효하지 않은 request", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
     @GetMapping()
     public ResponseDto<PageDto<ProjectDto>> findAll(
         @RequestParam(value = "keyword", required = false) String keyword,
@@ -53,6 +67,12 @@ public class ProjectController {
     }
 
     @Operation(summary = "프로젝트 상세 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "400", description = "유효하지 않은 request", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 프로젝트 pk", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
     @GetMapping("/{projectPk}")
     public ResponseDto<ProjectDto> findOne(@PathVariable("projectPk") Long projectPk) {
         return ResponseDto.success(200, projectService.findOne(projectPk));
@@ -60,6 +80,11 @@ public class ProjectController {
 
     @Operation(summary = "프로젝트 수정")
     @PatchMapping("/{projectPk}")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 프로젝트 pk", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
     public ResponseDto update(
         @PathVariable("projectPk") Long projectPk,
         @Valid @RequestBody UpdateProjectRequestDto updateProjectRequestDto
@@ -69,6 +94,11 @@ public class ProjectController {
     }
 
     @Operation(summary = "프로젝트 삭제")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "성공"),
+        @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "존재하지 않는 프로젝트 pk", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
     @DeleteMapping("/{projectPk}")
     public ResponseDto delete(@PathVariable("projectPk") Long projectPk) {
         projectService.delete(projectPk);
@@ -77,6 +107,10 @@ public class ProjectController {
 
 
     @Operation(summary = "내가 속한 프로젝트 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "403", description = "권한 없음", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
+    })
     @GetMapping("mine")
     public ResponseDto findMine(HttpServletRequest request,
         @RequestParam(value = "keyword", required = false) String keyword,
