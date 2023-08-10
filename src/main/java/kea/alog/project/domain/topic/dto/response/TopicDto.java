@@ -14,6 +14,7 @@ public class TopicDto {
 
     private Long pk;
     private Long projectPk;
+    private Long userPk;
     private String name;
     private String description;
     private LocalDateTime startDate;
