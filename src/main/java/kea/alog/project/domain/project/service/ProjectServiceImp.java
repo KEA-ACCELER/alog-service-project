@@ -36,8 +36,8 @@ public class ProjectServiceImp implements ProjectService {
     @Override
     public Project findByPk(Long projectPk) {
         return projectRepository.findByPkAndStatus(projectPk, Status.NORMAL)
-                                .orElseThrow(
-                                    () -> new EntityNotFoundException(404, "ENTITY_NOT_FOUND"));
+            .orElseThrow(
+                () -> new EntityNotFoundException(404, "ENTITY_NOT_FOUND"));
     }
 
     @Override
@@ -50,14 +50,14 @@ public class ProjectServiceImp implements ProjectService {
     public ProjectPkResponseDto create(Long userPk,
         CreateProjectRequestDto createProjectRequestDto) {
         Project project = Project.builder().name(createProjectRequestDto.getName())
-                                 .description(createProjectRequestDto.getDescription())
-                                 .teamPk(createProjectRequestDto.getTeamPk())
-                                 .pmPk(userPk).build();
+            .description(createProjectRequestDto.getDescription())
+            .teamPk(createProjectRequestDto.getTeamPk())
+            .pmPk(userPk).build();
 
         Long projectPk = projectRepository.save(project).getPk();
 
         ProjectMember projectMember = ProjectMember.builder().userPk(userPk).project(project)
-                                                   .build();
+            .build();
         projectMemberRepository.save(projectMember);
         return ProjectPkResponseDto.builder().projectPk(projectPk).build();
     }
@@ -76,14 +76,14 @@ public class ProjectServiceImp implements ProjectService {
                     Status.NORMAL, pageable);
 
         return PageDto.<ProjectDto>builder()
-                      .content(projectPage.getContent().stream().map(projectMapper::projectToDto)
-                                          .collect(
-                                              Collectors.toList()))
-                      .totalPages(projectPage.getTotalPages())
-                      .totalElements(projectPage.getTotalElements())
-                      .pageNumber(projectPage.getNumber())
-                      .pageSize(projectPage.getSize())
-                      .build();
+            .content(projectPage.getContent().stream().map(projectMapper::projectToDto)
+                .collect(
+                    Collectors.toList()))
+            .totalPages(projectPage.getTotalPages())
+            .totalElements(projectPage.getTotalElements())
+            .pageNumber(projectPage.getNumber())
+            .pageSize(projectPage.getSize())
+            .build();
     }
 
     @Transactional
@@ -124,22 +124,22 @@ public class ProjectServiceImp implements ProjectService {
     }
 
     private PageDto<MyProjectDto> findMineWithoutKeyword(Long userPk, Pageable pageable) {
-        Page<ProjectMember> projectMemberPage = projectMemberRepository.findByUserPkAndStatus(
-            userPk, Status.NORMAL, pageable);
+        Page<ProjectMember> projectMemberPage = projectMemberRepository.findByUserPkAndStatusAndProjectStatus(
+            userPk, Status.NORMAL, Status.NORMAL, pageable);
 
         List<Project> projects = projectMemberPage.getContent().stream()
-                                                  .map(projectMember -> projectMember.getProject())
-                                                  .toList();
+            .map(projectMember -> projectMember.getProject())
+            .toList();
 
         return PageDto.<MyProjectDto>builder()
-                      .content(
-                          projects.stream().map(projectMapper::projectToMyProjectDto)
-                                  .collect(Collectors.toList()))
-                      .totalPages(projectMemberPage.getTotalPages())
-                      .totalElements(projectMemberPage.getTotalElements())
-                      .pageNumber(projectMemberPage.getNumber())
-                      .pageSize(projectMemberPage.getSize())
-                      .build();
+            .content(
+                projects.stream().map(projectMapper::projectToMyProjectDto)
+                    .collect(Collectors.toList()))
+            .totalPages(projectMemberPage.getTotalPages())
+            .totalElements(projectMemberPage.getTotalElements())
+            .pageNumber(projectMemberPage.getNumber())
+            .pageSize(projectMemberPage.getSize())
+            .build();
     }
 
     private PageDto<MyProjectDto> findMineWithKeyword(Long userPk, String keyword,
@@ -149,14 +149,14 @@ public class ProjectServiceImp implements ProjectService {
             Status.NORMAL, keyword, pageable);
 
         return PageDto.<MyProjectDto>builder()
-                      .content(
-                          projectPage.getContent().stream()
-                                     .map(projectMapper::projectToMyProjectDto)
-                                     .collect(Collectors.toList()))
-                      .totalPages(projectPage.getTotalPages())
-                      .totalElements(projectPage.getTotalElements())
-                      .pageNumber(projectPage.getNumber())
-                      .pageSize(projectPage.getSize())
-                      .build();
+            .content(
+                projectPage.getContent().stream()
+                    .map(projectMapper::projectToMyProjectDto)
+                    .collect(Collectors.toList()))
+            .totalPages(projectPage.getTotalPages())
+            .totalElements(projectPage.getTotalElements())
+            .pageNumber(projectPage.getNumber())
+            .pageSize(projectPage.getSize())
+            .build();
     }
 }
