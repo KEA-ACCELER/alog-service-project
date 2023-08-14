@@ -4,6 +4,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
+import kea.alog.project.common.openFeign.NoticeFeign;
+import kea.alog.project.common.openFeign.dto.request.CreateNoticeRequestDto;
 import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.service.ProjectService;
 import kea.alog.project.domain.projectMember.dto.request.ProjectMemberRequestDto;
@@ -22,6 +24,7 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
 
     private final ProjectService projectService;
     private final ProjectMemberRepository projectMemberRepository;
+    private final NoticeFeign noticeFeign;
 
     @Override
     public PageDto<Long> findAll(Long projectPk, String keyword, int page,
@@ -33,29 +36,32 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
             projectPk, Status.NORMAL, pageable);
 
         return PageDto.<Long>builder()
-                      .content(projectMemberPage.getContent().stream()
-                                                .map(ProjectMember::getUserPk)
-                                                .collect(Collectors.toList()))
-                      .totalPages(projectMemberPage.getTotalPages())
-                      .totalElements(projectMemberPage.getTotalElements())
-                      .pageNumber(projectMemberPage.getNumber())
-                      .pageSize(projectMemberPage.getSize())
-                      .build();
+            .content(projectMemberPage.getContent().stream()
+                .map(ProjectMember::getUserPk)
+                .collect(Collectors.toList()))
+            .totalPages(projectMemberPage.getTotalPages())
+            .totalElements(projectMemberPage.getTotalElements())
+            .pageNumber(projectMemberPage.getNumber())
+            .pageSize(projectMemberPage.getSize())
+            .build();
     }
 
     @Override
     @Transactional
     public void join(Long projectPk, ProjectMemberRequestDto projectMemberRequestDto) {
-        projectService.findByPk(projectPk);
-
         Project project = projectService.findByPk(projectPk);
+
         for (Long userPk : projectMemberRequestDto.getUserPks()) {
             if (projectMemberRepository.findByProjectPkAndUserPkAndStatus(projectPk, userPk,
                 Status.NORMAL).isEmpty()) {
                 ProjectMember projectMember = ProjectMember.builder().project(project)
-                                                           .userPk(userPk)
-                                                           .build();
+                    .userPk(userPk)
+                    .build();
                 projectMemberRepository.save(projectMember);
+
+                String message = String.format("'%s'에 초대되었습니다.", project.getName());
+                noticeFeign.create(
+                    CreateNoticeRequestDto.builder().userPk(userPk).MsgContent(message).build());
             }
         }
     }
@@ -63,13 +69,17 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
     @Override
     @Transactional
     public void remove(Long projectPk, ProjectMemberRequestDto projectMemberRequestDto) {
-        projectService.findByPk(projectPk);
+        Project project = projectService.findByPk(projectPk);
 
         for (Long userPk : projectMemberRequestDto.getUserPks()) {
             Optional<ProjectMember> projectMember = projectMemberRepository.findByProjectPkAndUserPkAndStatus(
                 projectPk, userPk, Status.NORMAL);
             if (projectMember.isPresent()) {
                 projectMember.get().setStatus(Status.DELETED);
+                String message = String.format("'%s'에서 방출되었습니다.", project.getName());
+                noticeFeign.create(
+                    CreateNoticeRequestDto.builder().userPk(userPk).MsgContent(message).build()
+                );
             }
         }
     }
