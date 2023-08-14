@@ -4,6 +4,8 @@ import java.util.stream.Collectors;
 import kea.alog.project.common.constant.Status;
 import kea.alog.project.common.dto.PageDto;
 import kea.alog.project.common.exception.EntityNotFoundException;
+import kea.alog.project.common.openFeign.NoticeFeign;
+import kea.alog.project.common.openFeign.dto.request.CreateNoticeRequestDto;
 import kea.alog.project.domain.project.entity.Project;
 import kea.alog.project.domain.project.service.ProjectService;
 import kea.alog.project.domain.topic.constant.TopicSortType;
@@ -29,6 +31,7 @@ public class TopicServiceImpl implements TopicService {
     private final TopicRepository topicRepository;
     private final TopicMapper topicMapper;
     private final ProjectService projectService;
+    private final NoticeFeign noticeFeign;
 
     @Override
     public Topic findByProjectPkAndTopicPk(Long projectPk, Long topicPk) {
@@ -54,13 +57,13 @@ public class TopicServiceImpl implements TopicService {
                     pageable);
 
         return PageDto.<TopicDto>builder()
-                      .content(topicPage.getContent().stream().map(topicMapper::topicToDto)
-                                        .collect(Collectors.toList()))
-                      .totalPages(topicPage.getTotalPages())
-                      .totalElements(topicPage.getTotalElements())
-                      .pageNumber(topicPage.getNumber())
-                      .pageSize(topicPage.getSize())
-                      .build();
+            .content(topicPage.getContent().stream().map(topicMapper::topicToDto)
+                .collect(Collectors.toList()))
+            .totalPages(topicPage.getTotalPages())
+            .totalElements(topicPage.getTotalElements())
+            .pageNumber(topicPage.getNumber())
+            .pageSize(topicPage.getSize())
+            .build();
 
     }
 
@@ -88,13 +91,24 @@ public class TopicServiceImpl implements TopicService {
         Project project = projectService.findByPk(projectPk);
 
         Topic topic = topicRepository.save(Topic.builder()
-                                                .project(project)
-                                                .userPk(userPk)
-                                                .name(createTopicRequestDto.getName())
-                                                .description(createTopicRequestDto.getDescription())
-                                                .startDate(createTopicRequestDto.getStartDate())
-                                                .dueDate(createTopicRequestDto.getDueDate())
-                                                .build());
+            .project(project)
+            .userPk(userPk)
+            .name(createTopicRequestDto.getName())
+            .description(createTopicRequestDto.getDescription())
+            .startDate(createTopicRequestDto.getStartDate())
+            .dueDate(createTopicRequestDto.getDueDate())
+            .build());
+
+        String message = String.format("'%s'에 '%s'이/가 등록되었습니다.", project.getName(),
+            createTopicRequestDto.getName());
+
+        System.out.println(message);
+
+        project.getProjectMembers().stream()
+            .forEach(projectMember -> noticeFeign.create(
+                CreateNoticeRequestDto.builder().userPk(projectMember.getUserPk())
+                    .MsgContent(message)
+                    .build()));
 
         return TopicPkResponseDto.builder().topicPk(topic.getPk()).projectPk(projectPk).build();
     }

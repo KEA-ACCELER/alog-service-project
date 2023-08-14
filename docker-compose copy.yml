@@ -6,6 +6,7 @@ services:
       - SPRING_DATASOURCE_URL=
       - SPRING_DATASOURCE_USERNAME=
       - SPRING_DATASOURCE_PASSWORD=
+      - NOTICE_SERVICE_URL=
     ports:
       - "30000:8083"
     depends_on:
