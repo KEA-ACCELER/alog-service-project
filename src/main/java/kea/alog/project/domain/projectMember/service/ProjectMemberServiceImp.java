@@ -50,7 +50,7 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
     @Transactional
     public void join(Long projectPk, ProjectMemberRequestDto projectMemberRequestDto) {
         Project project = projectService.findByPk(projectPk);
-        
+
         for (Long userPk : projectMemberRequestDto.getUserPks()) {
             if (projectMemberRepository.findByProjectPkAndUserPkAndStatus(projectPk, userPk,
                 Status.NORMAL).isEmpty()) {
@@ -59,7 +59,7 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
                     .build();
                 projectMemberRepository.save(projectMember);
 
-                String message = String.format("'$s'에 초대되었습니다.", project.getName());
+                String message = String.format("'%s'에 초대되었습니다.", project.getName());
                 noticeFeign.create(
                     CreateNoticeRequestDto.builder().userPk(userPk).MsgContent(message).build());
             }
@@ -69,13 +69,17 @@ public class ProjectMemberServiceImp implements ProjectMemberService {
     @Override
     @Transactional
     public void remove(Long projectPk, ProjectMemberRequestDto projectMemberRequestDto) {
-        projectService.findByPk(projectPk);
+        Project project = projectService.findByPk(projectPk);
 
         for (Long userPk : projectMemberRequestDto.getUserPks()) {
             Optional<ProjectMember> projectMember = projectMemberRepository.findByProjectPkAndUserPkAndStatus(
                 projectPk, userPk, Status.NORMAL);
             if (projectMember.isPresent()) {
                 projectMember.get().setStatus(Status.DELETED);
+                String message = String.format("'%s'에서 방출되었습니다.", project.getName());
+                noticeFeign.create(
+                    CreateNoticeRequestDto.builder().userPk(userPk).MsgContent(message).build()
+                );
             }
         }
     }
