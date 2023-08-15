@@ -25,5 +25,5 @@ public interface ProjectService {
     void delete(Long projectPk);
 
     PageDto<MyProjectDto> findMine(Long userPk, String keyword, ProjectSortType sortType,
-        int page, int size);
+        int page, int size, Long teamPk);
 }

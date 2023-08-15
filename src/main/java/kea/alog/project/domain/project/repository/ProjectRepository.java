@@ -23,4 +23,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
         Status status,
         String keyword,
         Pageable pageable);
+
+    Page<Project> findByTeamPkAndStatus(Long teamPk, Status status, Pageable pageable);
+
+    Page<Project> findByTeamPkAndStatusAndNameContaining(Long teamPk, Status status, String keyword,
+        Pageable pageable);
 }
