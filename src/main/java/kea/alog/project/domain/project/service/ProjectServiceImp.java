@@ -105,15 +105,15 @@ public class ProjectServiceImp implements ProjectService {
 
     @Override
     public PageDto<MyProjectDto> findMine(Long userPk, String keyword, ProjectSortType sortType,
-        int page, int size) {
+        int page, int size, Long teamPk) {
         Sort sort = getSort(sortType);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        if (keyword == null) {
-            return findMineWithoutKeyword(userPk, pageable);
+        if (teamPk == null) {
+            return findMineAll(userPk, keyword, pageable);
         }
 
-        return findMineWithKeyword(userPk, keyword, pageable);
+        return findMineWithTeamPk(teamPk, pageable, keyword);
     }
 
     private Sort getSort(ProjectSortType sortType) {
@@ -123,7 +123,14 @@ public class ProjectServiceImp implements ProjectService {
         };
     }
 
-    private PageDto<MyProjectDto> findMineWithoutKeyword(Long userPk, Pageable pageable) {
+    private PageDto<MyProjectDto> findMineAll(Long userPk, String keyword, Pageable pageable) {
+        if (keyword == null) {
+            return findMineAllWithoutKeyword(userPk, pageable);
+        }
+        return findMineAllWithKeyword(userPk, keyword, pageable);
+    }
+
+    private PageDto<MyProjectDto> findMineAllWithoutKeyword(Long userPk, Pageable pageable) {
         Page<ProjectMember> projectMemberPage = projectMemberRepository.findByUserPkAndStatusAndProjectStatus(
             userPk, Status.NORMAL, Status.NORMAL, pageable);
 
@@ -142,7 +149,7 @@ public class ProjectServiceImp implements ProjectService {
             .build();
     }
 
-    private PageDto<MyProjectDto> findMineWithKeyword(Long userPk, String keyword,
+    private PageDto<MyProjectDto> findMineAllWithKeyword(Long userPk, String keyword,
         Pageable pageable) {
         Page<Project> projectPage = projectRepository.findByProjectMembersUserPkAndProjectMembersStatusAndNameContaining(
             userPk,
@@ -153,6 +160,25 @@ public class ProjectServiceImp implements ProjectService {
                 projectPage.getContent().stream()
                     .map(projectMapper::projectToMyProjectDto)
                     .collect(Collectors.toList()))
+            .totalPages(projectPage.getTotalPages())
+            .totalElements(projectPage.getTotalElements())
+            .pageNumber(projectPage.getNumber())
+            .pageSize(projectPage.getSize())
+            .build();
+    }
+
+    private PageDto<MyProjectDto> findMineWithTeamPk(Long teamPk, Pageable pageable,
+        String keyword) {
+        Page<Project> projectPage =
+            keyword == null ? projectRepository.findByTeamPkAndStatus(teamPk, Status.NORMAL,
+                pageable)
+                : projectRepository.findByTeamPkAndStatusAndNameContaining(teamPk, Status.NORMAL,
+                    keyword,
+                    pageable);
+
+        return PageDto.<MyProjectDto>builder()
+            .content(projectPage.getContent().stream().map(projectMapper::projectToMyProjectDto)
+                .collect(Collectors.toList()))
             .totalPages(projectPage.getTotalPages())
             .totalElements(projectPage.getTotalElements())
             .pageNumber(projectPage.getNumber())

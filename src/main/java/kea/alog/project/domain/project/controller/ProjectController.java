@@ -116,9 +116,10 @@ public class ProjectController {
     public ResponseDto<PageDto<MyProjectDto>> findMine(HttpServletRequest request,
         @RequestParam(value = "keyword", required = false) String keyword,
         @RequestParam("sortType") ProjectSortType sortType, @RequestParam("page") int page,
-        @RequestParam("size") int size) {
+        @RequestParam("size") int size,
+        @RequestParam(value = "teamPk", required = false) Long teamPk) {
         TokenPayloadDto userInfo = (TokenPayloadDto) request.getAttribute("user");
         return ResponseDto.success(200,
-            projectService.findMine(userInfo.getUserPk(), keyword, sortType, page, size));
+            projectService.findMine(userInfo.getUserPk(), keyword, sortType, page, size, teamPk));
     }
 }
