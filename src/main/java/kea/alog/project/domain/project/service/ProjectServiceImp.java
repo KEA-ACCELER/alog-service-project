@@ -64,16 +64,40 @@ public class ProjectServiceImp implements ProjectService {
 
     @Override
     public PageDto<ProjectDto> findAll(String keyword, ProjectSortType sortType, int page,
-        int size) {
+        int size, Long teamPk) {
         Sort sort = getSort(sortType);
         Pageable pageable = PageRequest.of(page, size, sort);
 
+        return teamPk == null ? findAllWithoutTeamPk(keyword, pageable)
+            : findAllByTeamPk(keyword, teamPk, pageable);
+    }
+
+    private PageDto<ProjectDto> findAllWithoutTeamPk(String keyword, Pageable pageable) {
         Page<Project> projectPage =
             keyword == null ? projectRepository.findAllByStatus(Status.NORMAL, pageable) :
                 projectRepository.findAllByNameContainingOrDescriptionContainingAndStatus(
                     keyword,
                     keyword,
                     Status.NORMAL, pageable);
+
+        return PageDto.<ProjectDto>builder()
+            .content(projectPage.getContent().stream().map(projectMapper::projectToDto)
+                .collect(
+                    Collectors.toList()))
+            .totalPages(projectPage.getTotalPages())
+            .totalElements(projectPage.getTotalElements())
+            .pageNumber(projectPage.getNumber())
+            .pageSize(projectPage.getSize())
+            .build();
+    }
+
+    private PageDto<ProjectDto> findAllByTeamPk(String keyword, Long teamPk, Pageable pageable) {
+        Page<Project> projectPage =
+            keyword == null ? projectRepository.findByTeamPkAndStatus(teamPk, Status.NORMAL,
+                pageable)
+                : projectRepository.findByTeamPkAndStatusAndNameContaining(teamPk, Status.NORMAL,
+                    keyword,
+                    pageable);
 
         return PageDto.<ProjectDto>builder()
             .content(projectPage.getContent().stream().map(projectMapper::projectToDto)
