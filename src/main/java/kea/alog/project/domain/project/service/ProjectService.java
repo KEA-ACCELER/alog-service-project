@@ -18,7 +18,7 @@ public interface ProjectService {
     ProjectPkResponseDto create(Long userPk, CreateProjectRequestDto createProjectRequestDto);
 
     PageDto<ProjectDto> findAll(String keyword, ProjectSortType sortType, int page,
-        int size);
+        int size, Long teamPk);
 
     void update(Long projectPk, UpdateProjectRequestDto updateProjectRequestDto);
 
