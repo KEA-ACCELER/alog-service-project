@@ -63,8 +63,10 @@ public class ProjectController {
     public ResponseDto<PageDto<ProjectDto>> findAll(
         @RequestParam(value = "keyword", required = false) String keyword,
         @RequestParam("sortType") ProjectSortType sortType, @RequestParam("page") int page,
-        @RequestParam("size") int size) {
-        return ResponseDto.success(200, projectService.findAll(keyword, sortType, page, size));
+        @RequestParam("size") int size,
+        @RequestParam(value = "teamPk", required = false) Long teamPk) {
+        return ResponseDto.success(200,
+            projectService.findAll(keyword, sortType, page, size, teamPk));
     }
 
     @Operation(summary = "프로젝트 상세 조회")
